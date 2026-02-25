@@ -11,6 +11,7 @@
         margin: 0;
         padding: 20px;
         color: #333;
+        position: relative;
       }
       .header {
         text-align: center;
@@ -26,12 +27,20 @@
       }
       .controls {
         text-align: center;
-        margin-bottom: 30px;
+        margin: 0 auto 30px auto;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        width: fit-content;
       }
       select {
         padding: 10px;
         font-size: 16px;
         border-radius: 5px;
+        margin: 0 10px;
+        cursor: pointer;
+        border: 1px solid #ccc;
       }
       .dashboard {
         display: flex;
@@ -121,9 +130,54 @@
         color: #155724;
         border: 1px solid #c3e6cb;
       }
+
+      /* TT13's Goofy Request */
+      .tt13-special {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive;
+        font-size: 11px;
+        color: #ff00ff;
+        background-color: #ccff00;
+        border: 3px dashed #00ffff;
+        padding: 5px;
+        transform: rotate(-15deg);
+        box-shadow: 3px 3px 0px #ff0000;
+        z-index: 1000;
+        animation: vibrate 0.3s linear infinite both;
+      }
+
+      @keyframes vibrate {
+        0% {
+          transform: rotate(-15deg) translate(0, 0);
+        }
+        20% {
+          transform: rotate(-17deg) translate(-1px, 1px);
+        }
+        40% {
+          transform: rotate(-13deg) translate(-1px, -1px);
+        }
+        60% {
+          transform: rotate(-17deg) translate(1px, 1px);
+        }
+        80% {
+          transform: rotate(-13deg) translate(1px, -1px);
+        }
+        100% {
+          transform: rotate(-15deg) translate(0, 0);
+        }
+      }
     </style>
   </head>
   <body>
+    <div class="tt13-special">
+      OFFICIAL SEASON WINS<br />
+      TT13: 3<br />
+      Matt: 2<br />
+      🤪🤪🤪
+    </div>
+
     <div class="header">
       <h1>QB Drafts Contest Tracker</h1>
       <div class="lifetime-score" id="lifetimeScore">
@@ -131,15 +185,25 @@
       </div>
     </div>
 
-    <div class="controls">
-      <label for="seasonSelect"><strong>Select Season:</strong> </label>
-      <select id="seasonSelect" onchange="renderSeason(this.value)">
-        <option value="2025">2025-2026</option>
-        <option value="2024">2024-2025</option>
-        <option value="2023">2023-2024</option>
-        <option value="2022">2022-2023</option>
-        <option value="2021">2021-2022</option>
+    <div class="controls" style="text-align: center">
+      <label for="viewSelect"><strong>View Mode:</strong> </label>
+      <select id="viewSelect" onchange="toggleViewMode(this.value)">
+        <option value="single">Single Season</option>
+        <option value="alltime">All-Time Lifetime Stats</option>
       </select>
+
+      <span id="seasonSelectorSpan">
+        <label for="seasonSelect" style="margin-left: 20px"
+          ><strong>Season:</strong>
+        </label>
+        <select id="seasonSelect" onchange="renderSeason(this.value)">
+          <option value="2025">2025-2026</option>
+          <option value="2024">2024-2025</option>
+          <option value="2023">2023-2024</option>
+          <option value="2022">2022-2023</option>
+          <option value="2021">2021-2022</option>
+        </select>
+      </span>
     </div>
 
     <div class="dashboard" id="dashboard">
@@ -157,13 +221,24 @@
                 <h2>Lifetime Scoreboard</h2>
                 <h3>Matt: ${data.Matt.lifetime_points} | TT13: ${data.TT13.lifetime_points}</h3>
             `;
-          renderSeason("2025");
+          renderSeason(document.getElementById("seasonSelect").value);
         })
         .catch((error) => {
           document.getElementById("dashboard").innerHTML =
-            `<p style="color:red;">Error loading data. Did you run the Python script first?</p>`;
+            `<p style="color:red;">Error loading data.</p>`;
           console.error("Error fetching standings:", error);
         });
+
+      function toggleViewMode(mode) {
+        if (mode === "single") {
+          document.getElementById("seasonSelectorSpan").style.display =
+            "inline";
+          renderSeason(document.getElementById("seasonSelect").value);
+        } else {
+          document.getElementById("seasonSelectorSpan").style.display = "none";
+          renderAllTime();
+        }
+      }
 
       function renderSeason(year) {
         const dashboard = document.getElementById("dashboard");
@@ -191,7 +266,7 @@
 
           let tableHTML = `
                 <div class="team-card ${isWinnerClass}">
-                    <h2>${managerName}'s Team</h2>
+                    <h2>${managerName}'s Team (${year})</h2>
                     <table>
                         <thead>
                             <tr>
@@ -207,13 +282,11 @@
             let postSeasonPts =
               player.byes * 3 + player.playoff_wins * 3 + player.sb_wins * 5;
 
-            // Add Sub badges if applicable
             let subBadgeHTML = "";
-            if (player.subbed_out) {
+            if (player.subbed_out)
               subBadgeHTML = `<span class="sub-badge sub-out">Subbed Out (Wk 10)</span>`;
-            } else if (player.subbed_in) {
+            else if (player.subbed_in)
               subBadgeHTML = `<span class="sub-badge sub-in">Subbed In (Wk 10)</span>`;
-            }
 
             let mathBreakdown = `
                     <div class="math-breakdown">
@@ -233,10 +306,7 @@
 
             tableHTML += `
                     <tr>
-                        <td>
-                            <strong>${player.name}</strong>
-                            ${subBadgeHTML}
-                        </td>
+                        <td><strong>${player.name}</strong>${subBadgeHTML}</td>
                         <td>${mathBreakdown}</td>
                         <td style="font-size: 1.3em; font-weight: bold; text-align: center; vertical-align: middle;">${player.points}</td>
                     </tr>
@@ -247,6 +317,94 @@
                         <tr class="total-row">
                             <td colspan="2" style="text-align: right;">Total Score:</td>
                             <td style="text-align: center;">${managerData.year_points}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+          dashboard.innerHTML += tableHTML;
+        }
+      }
+
+      // --- NEW ALL-TIME AGGREGATION LOGIC ---
+      function renderAllTime() {
+        const dashboard = document.getElementById("dashboard");
+        dashboard.innerHTML = "";
+
+        // 1. Aggregate the stats
+        let allTimeData = { Matt: {}, TT13: {} };
+
+        for (const manager of ["Matt", "TT13"]) {
+          for (const year in appData[manager].seasons) {
+            appData[manager].seasons[year].roster.forEach((player) => {
+              if (!allTimeData[manager][player.name]) {
+                allTimeData[manager][player.name] = {
+                  name: player.name,
+                  wins: 0,
+                  losses: 0,
+                  playoff_wins: 0,
+                  byes: 0,
+                  sb_wins: 0,
+                  points: 0,
+                  seasons_played: 0,
+                };
+              }
+              let qb = allTimeData[manager][player.name];
+              qb.wins += player.wins;
+              qb.losses += player.losses;
+              qb.playoff_wins += player.playoff_wins;
+              qb.byes += player.byes;
+              qb.sb_wins += player.sb_wins;
+              qb.points += player.points;
+              qb.seasons_played += 1;
+            });
+          }
+        }
+
+        // 2. Render the All-Time tables
+        for (const manager of ["Matt", "TT13"]) {
+          // Convert object to array and sort by total points descending
+          let qbArray = Object.values(allTimeData[manager]);
+          qbArray.sort((a, b) => b.points - a.points);
+
+          let tableHTML = `
+                <div class="team-card">
+                    <h2>${manager}'s All-Time QBs</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Player</th>
+                                <th style="width: 65%;">Career Breakdown</th>
+                                <th style="width: 15%; text-align: center;">Total Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+          qbArray.forEach((qb) => {
+            let postSeasonW = qb.playoff_wins + qb.byes;
+            let mathBreakdown = `
+                    <div class="math-breakdown">
+                        <div><b>Seasons Drafted:</b> ${qb.seasons_played}</div>
+                        <div><b>Reg. Season Record:</b> ${qb.wins}W - ${qb.losses}L</div>
+                        <div><b>Postseason Record:</b> ${postSeasonW}W (${qb.byes} Byes)</div>
+                        <div><b>Super Bowls:</b> ${qb.sb_wins}</div>
+                    </div>
+                `;
+
+            tableHTML += `
+                    <tr>
+                        <td><strong>${qb.name}</strong></td>
+                        <td>${mathBreakdown}</td>
+                        <td style="font-size: 1.3em; font-weight: bold; text-align: center; vertical-align: middle;">${qb.points}</td>
+                    </tr>
+                `;
+          });
+
+          tableHTML += `
+                        <tr class="total-row">
+                            <td colspan="2" style="text-align: right;">Lifetime Total:</td>
+                            <td style="text-align: center;">${appData[manager].lifetime_points}</td>
                         </tr>
                         </tbody>
                     </table>
