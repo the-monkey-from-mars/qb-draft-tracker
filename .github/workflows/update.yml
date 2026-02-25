@@ -1,0 +1,33 @@
+name: Update QB Standings
+
+on:
+  schedule:
+    # Runs at 12:00 UTC (8:00 AM EST) every Tuesday morning
+    - cron: '0 12 * * 2' 
+  workflow_dispatch: # Adds a button so you can run it manually anytime
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Libraries
+        run: pip install pandas nfl_data_py
+
+      - name: Run the Python Script
+        run: python updater.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "NFL Stat Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add standings.json
+          git commit -m "Automated Tuesday update of NFL standings" || exit 0
+          git push
