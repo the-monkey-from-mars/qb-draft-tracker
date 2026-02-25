@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QB Draft Contest Tracker</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .lifetime-score {
+        background: #002244;
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+      .controls {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+      .dashboard {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .team-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 48%;
+        padding: 20px;
+        min-width: 350px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        vertical-align: top;
+      }
+      th {
+        background-color: #002244;
+        color: white;
+      }
+      .total-row {
+        font-weight: bold;
+        font-size: 1.2em;
+        background-color: #e9ecef;
+      }
+      .winner {
+        border: 4px solid #28a745;
+        position: relative;
+      }
+      .winner::after {
+        content: "SEASON WINNER";
+        position: absolute;
+        top: -15px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      /* Math Breakdown Styles */
+      .math-breakdown {
+        font-size: 0.85em;
+        color: #555;
+        line-height: 1.5;
+      }
+      .math-breakdown b {
+        color: #222;
+      }
+      .penalty {
+        color: #d9534f;
+        font-weight: bold;
+      }
+      .pts-badge {
+        float: right;
+        font-weight: bold;
+        color: #002244;
+      }
+      .sub-badge {
+        display: block;
+        font-size: 0.8em;
+        margin-top: 4px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .sub-out {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .sub-in {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>QB Drafts Contest Tracker</h1>
+      <div class="lifetime-score" id="lifetimeScore">
+        Loading Lifetime Stats...
+      </div>
+    </div>
+
+    <div class="controls">
+      <label for="seasonSelect"><strong>Select Season:</strong> </label>
+      <select id="seasonSelect" onchange="renderSeason(this.value)">
+        <option value="2025">2025-2026</option>
+        <option value="2024">2024-2025</option>
+        <option value="2023">2023-2024</option>
+        <option value="2022">2022-2023</option>
+        <option value="2021">2021-2022</option>
+      </select>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+      <p>Loading latest NFL data...</p>
+    </div>
+
+    <script>
+      let appData = {};
+
+      fetch("standings.json")
+        .then((response) => response.json())
+        .then((data) => {
+          appData = data;
+          document.getElementById("lifetimeScore").innerHTML = `
+                <h2>Lifetime Scoreboard</h2>
+                <h3>Matt: ${data.Matt.lifetime_points} | TT13: ${data.TT13.lifetime_points}</h3>
+            `;
+          renderSeason("2025");
+        })
+        .catch((error) => {
+          document.getElementById("dashboard").innerHTML =
+            `<p style="color:red;">Error loading data. Did you run the Python script first?</p>`;
+          console.error("Error fetching standings:", error);
+        });
+
+      function renderSeason(year) {
+        const dashboard = document.getElementById("dashboard");
+        dashboard.innerHTML = "";
+
+        if (!appData.Matt.seasons[year]) {
+          dashboard.innerHTML = `<p>No data entered for the ${year} season yet.</p>`;
+          return;
+        }
+
+        let maxPoints = -1;
+        let leader = "";
+
+        for (const manager of ["Matt", "TT13"]) {
+          let pts = appData[manager].seasons[year].year_points;
+          if (pts > maxPoints) {
+            maxPoints = pts;
+            leader = manager;
+          }
+        }
+
+        for (const managerName of ["Matt", "TT13"]) {
+          let managerData = appData[managerName].seasons[year];
+          let isWinnerClass = managerName === leader ? "winner" : "";
+
+          let tableHTML = `
+                <div class="team-card ${isWinnerClass}">
+                    <h2>${managerName}'s Team</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Player</th>
+                                <th style="width: 60%;">Points Breakdown</th>
+                                <th style="width: 15%; text-align: center;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+          managerData.roster.forEach((player) => {
+            let postSeasonPts =
+              player.byes * 3 + player.playoff_wins * 3 + player.sb_wins * 5;
+
+            // Add Sub badges if applicable
+            let subBadgeHTML = "";
+            if (player.subbed_out) {
+              subBadgeHTML = `<span class="sub-badge sub-out">Subbed Out (Wk 10)</span>`;
+            } else if (player.subbed_in) {
+              subBadgeHTML = `<span class="sub-badge sub-in">Subbed In (Wk 10)</span>`;
+            }
+
+            let mathBreakdown = `
+                    <div class="math-breakdown">
+                        <div><b>Reg. Season (${player.wins}W - ${player.losses}L):</b> 
+                            ${player.halved ? `<span class="penalty">Sub-.500 Penalty!</span>` : ``} 
+                            <span class="pts-badge">+${player.reg_points}</span>
+                        </div>
+                        <div><b>Postseason (${player.byes} Byes, ${player.playoff_wins}W, ${player.sb_wins} SB):</b>
+                            <span class="pts-badge">+${postSeasonPts}</span>
+                        </div>
+                        <div style="border-top: 1px dashed #ccc; margin-top: 4px; padding-top: 4px;">
+                            <i>Missed Games (Injury/DNP): ${player.missed_games}</i><br>
+                            <i>Goff Rule Triggered (Out-passed by backup): ${player.goff_rule}</i>
+                        </div>
+                    </div>
+                `;
+
+            tableHTML += `
+                    <tr>
+                        <td>
+                            <strong>${player.name}</strong>
+                            ${subBadgeHTML}
+                        </td>
+                        <td>${mathBreakdown}</td>
+                        <td style="font-size: 1.3em; font-weight: bold; text-align: center; vertical-align: middle;">${player.points}</td>
+                    </tr>
+                `;
+          });
+
+          tableHTML += `
+                        <tr class="total-row">
+                            <td colspan="2" style="text-align: right;">Total Score:</td>
+                            <td style="text-align: center;">${managerData.year_points}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+          dashboard.innerHTML += tableHTML;
+        }
+      }
+    </script>
+  </body>
+</html>
