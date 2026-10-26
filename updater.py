@@ -101,12 +101,13 @@ def team_results(sched: pd.DataFrame) -> pd.DataFrame:
     done = sched[sched["result"].notna()]
     rows = []
     for _, g in done.iterrows():
-        for team, opp, pf, pa in (
-            (g.home_team, g.away_team, g.home_score, g.away_score),
-            (g.away_team, g.home_team, g.away_score, g.home_score),
+        for team, opp, pf, pa, home in (
+            (g.home_team, g.away_team, g.home_score, g.away_score, True),
+            (g.away_team, g.home_team, g.away_score, g.home_score, False),
         ):
             rows.append({
                 "game_id": g.game_id, "week": int(g.week), "game_type": g.game_type,
+                "date": str(g.gameday), "home": home,
                 "team": team, "opponent": opp, "pf": int(pf), "pa": int(pa),
                 "outcome": "W" if pf > pa else ("L" if pf < pa else "T"),
             })
@@ -139,7 +140,7 @@ def team_lookup(qb_id, pbp, fallback=None):
 # --------------------------------------------------------------------------
 # Scoring
 # --------------------------------------------------------------------------
-def score_qb(entry, games, credit, byes, team_of):
+def score_qb(entry, games, credit, byes, team_of, names):
     qb_id = entry["id"]
     lo, hi = entry.get("from_week", 1), entry.get("to_week", OPEN_END)
 
@@ -151,7 +152,8 @@ def score_qb(entry, games, credit, byes, team_of):
     for _, g in games[(games.week >= lo) & (games.week <= hi)].iterrows():
         if g.team != team_of(g.week):
             continue
-        base = {"wk": g.week, "type": g.game_type, "opp": g.opponent}
+        base = {"wk": g.week, "type": g.game_type, "opp": g.opponent,
+                "gid": g.game_id, "date": g.date, "home": bool(g.home), "team": g.team}
         if not g.has_pbp:
             log.append({**base, "res": "pending"})
             continue
@@ -167,19 +169,28 @@ def score_qb(entry, games, credit, byes, team_of):
 
         row = mine.iloc[0]
         rec = {**base, "att": int(row.attempts)}
+        opp_key = (g.game_id, g.opponent)
+        if opp_key in by_game.index:
+            o = by_game.loc[[opp_key]]
+            o = o[o.credited]
+            if not o.empty:
+                rec["opp_qb_id"] = o.iloc[0].passer_player_id
+                rec["opp_qb"] = names.get(o.iloc[0].passer_player_id, o.iloc[0].passer_name)
+                rec["opp_att"] = int(o.iloc[0].attempts)
         if isinstance(row.ruling, str):
             rec["ruling"] = row.ruling
         if not row.credited:
             other = team_rows[team_rows.credited].iloc[0]
             stats["goff_rule"] += 1
             rec.update(res="goff", outcome=g.outcome,
-                       credited=other.passer_name, credited_att=int(other.attempts))
+                       credited=names.get(other.passer_player_id, other.passer_name),
+                       credited_att=int(other.attempts))
         else:
             rec["res"] = g.outcome
             tied = team_rows[(team_rows.passer_player_id != qb_id)
                              & (team_rows.attempts == row.attempts)]
             if not tied.empty and not isinstance(row.ruling, str):
-                rec["tiebreak"] = tied.iloc[0].passer_name
+                rec["tiebreak"] = names.get(tied.iloc[0].passer_player_id, tied.iloc[0].passer_name)
             if g.game_type == "REG":
                 stats[{"W": "wins", "L": "losses", "T": "ties"}[g.outcome]] += 1
             elif g.outcome == "W":
@@ -253,7 +264,38 @@ def build_audit(managers_out):
     return audit
 
 
-def build_season(year, cfg, managers):
+def head_to_head(seasons, managers):
+    """Every game where both managers had a credited QB on the field
+    against each other, within each QB's roster window."""
+    games = []
+    for year, s in seasons.items():
+        credited = {}  # game_id -> {manager: (qb, log entry)}
+        for m in managers:
+            for q in s["managers"][m]["roster"]:
+                for g in q["games"]:
+                    if g["res"] in ("W", "L", "T"):
+                        credited.setdefault(g["gid"], {})[m] = (q, g)
+        for gid, sides in credited.items():
+            if len(sides) < 2:
+                continue
+            a, b = managers
+            (qa, ga), (qb, gb) = sides[a], sides[b]
+            assert ga["opp_qb_id"] == qb["id"] and gb["opp_qb_id"] == qa["id"], gid
+            winner = {"W": a, "L": b, "T": None}[ga["res"]]
+            home = a if ga["home"] else b
+            games.append({
+                "season": year, "wk": ga["wk"], "type": ga["type"], "date": ga["date"],
+                "qbs": {a: qa["name"], b: qb["name"]},
+                "ids": {a: qa["id"], b: qb["id"]},
+                "teams": {a: gb["opp"], b: ga["opp"]},
+                "score": {a: int(ga["score"].split("-")[0]), b: int(ga["score"].split("-")[1])},
+                "home": home, "winner": winner,
+            })
+    games.sort(key=lambda g: (g["season"], g["date"], g["wk"]))
+    return games
+
+
+def build_season(year, cfg, managers, names):
     print(f"Season {year}: loading data…")
     sched = nfl.load_schedules([year]).to_pandas()
     pbp = nfl.load_pbp([year]).to_pandas()
@@ -269,7 +311,7 @@ def build_season(year, cfg, managers):
 
     managers_out = {}
     for m in managers:
-        roster = [score_qb(e, games, credit, byes, team_lookup(e["id"], pbp))
+        roster = [score_qb(e, games, credit, byes, team_lookup(e["id"], pbp), names)
                   for e in cfg["rosters"][m]]
         managers_out[m] = {"points": sum(q["points"] for q in roster), "roster": roster}
 
@@ -288,7 +330,9 @@ def build_season(year, cfg, managers):
 def main():
     config = json.loads(CONFIG_PATH.read_text())
     managers = config["managers"]
-    seasons = {y: build_season(int(y), cfg, managers)
+    players = nfl.load_players().to_pandas()
+    names = dict(zip(players.gsis_id, players.display_name))
+    seasons = {y: build_season(int(y), cfg, managers, names)
                for y, cfg in sorted(config["seasons"].items())}
 
     lifetime = {m: sum(s["managers"][m]["points"] for s in seasons.values()) for m in managers}
@@ -301,6 +345,7 @@ def main():
                 season_wins[leaders[0]] += 1
 
     result = {
+        "head_to_head": head_to_head(seasons, managers),
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="minutes"),
         "managers": managers,
         "lifetime_points": lifetime,

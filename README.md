@@ -33,6 +33,10 @@ The site is static: GitHub Pages serves `index.html` and `standings.json`, and t
 
 **Goff rule scope:** applies to every game (injury, rest or benching alike), not only injuries.
 
+**Head-to-head:** a game counts when a TT13 QB and a Matt QB faced each other, both were on their manager's roster that week (bench-swap windows respected), and both were credited with the result under the Goff rule. Playoffs are included. A QB who played for both managers is listed under each, with only that stint's games. Built in `updater.py` (`head_to_head`) and stored in `standings.json`.
+
+**Game details:** hovering (or tapping, on phones) a W/L/T square shows the date, final score, attempts and opposing QB.
+
 **Audit:** each season's page lists every bench swap, every Goff-rule game (with both QBs' attempts), every attempts tie settled by the starter rule, every NFL tie and every ruling.
 
 **Byes:** detected automatically (teams that skip the wild-card round) and credited to whoever is credited with that team's divisional-round game.

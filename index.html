@@ -245,6 +245,35 @@
   .rules th, .rules td { text-align: left; padding: 8px 0; border-top: 1px solid var(--line); font-weight: 500; }
   .rules td { text-align: right; font: 700 1.05rem var(--cond); }
 
+  .g { cursor: pointer; }
+  .tip {
+    position: fixed;
+    z-index: 50;
+    max-width: 280px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 8px;
+    padding: 9px 11px;
+    font: 400 0.85rem/1.4 var(--body);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+  }
+  .tip b { font-weight: 600; }
+
+  .h2h-seasons td { width: 6.5rem; }
+  .opps, .h2h-log { list-style: none; margin: 0 0 10px; padding: 0; }
+  .opps li, .h2h-log li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    border-top: 1px solid var(--line);
+  }
+  .opps b, .h2h-log b { font: 700 1rem var(--cond); color: var(--ink); white-space: nowrap; }
+  .h2h-log { font-size: 0.85rem; }
+  .h2h-log li.W b { color: var(--turf); }
+  .h2h-log li.L b { color: var(--flag); }
+
   .note { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.85rem; }
   .note a { color: inherit; }
 
@@ -309,7 +338,7 @@ load()
     buildChrome();
     const years = Object.keys(d.seasons).sort();
     const fromHash = location.hash.slice(1);
-    select(d.seasons[fromHash] || ["all","rules"].includes(fromHash) ? fromHash : years[years.length - 1]);
+    select(d.seasons[fromHash] || ["all","rules","h2h"].includes(fromHash) ? fromHash : years[years.length - 1]);
   })
   .catch((e) => {
     $("matchup").textContent = "Couldn't load standings.json. Refresh to try again.";
@@ -328,6 +357,12 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function buildChrome() {
+  H2H_KEYS = new Set();
+  for (const g of data.head_to_head || []) {
+    const [a, b] = data.managers;
+    H2H_KEYS.add(`${g.date}|${g.ids[a]}|${g.ids[b]}`);
+    H2H_KEYS.add(`${g.date}|${g.ids[b]}|${g.ids[a]}`);
+  }
   const [a, b] = data.managers;
   const w = data.season_wins;
   const s = $("sticker");
@@ -342,6 +377,7 @@ function buildChrome() {
   const tabs = Object.keys(data.seasons).sort().reverse().map((y) =>
     `<button role="tab" data-key="${y}">${data.seasons[y].label}</button>`);
   tabs.push(`<button role="tab" data-key="all">All-time</button>`);
+  tabs.push(`<button role="tab" data-key="h2h">Head-to-head</button>`);
   tabs.push(`<button role="tab" data-key="rules">Rules</button>`);
   $("tabs").innerHTML = tabs.join("");
   $("tabs").onclick = (e) => { const k = e.target.dataset.key; if (k) select(k); };
@@ -349,13 +385,13 @@ function buildChrome() {
 
 window.addEventListener("hashchange", () => {
   const k = location.hash.slice(1);
-  if (data && (data.seasons[k] || k === "all" || k === "rules")) select(k);
+  if (data && (data.seasons[k] || ["all", "rules", "h2h"].includes(k))) select(k);
 });
 
 function select(key) {
   history.replaceState(null, "", "#" + key);
   for (const b of $("tabs").children) b.setAttribute("aria-selected", b.dataset.key === key);
-  key === "all" ? renderAllTime() : key === "rules" ? renderRules() : renderSeason(key);
+  key === "all" ? renderAllTime() : key === "rules" ? renderRules() : key === "h2h" ? renderH2H() : renderSeason(key);
 }
 
 function leaderOf(pts) {
@@ -407,6 +443,7 @@ function renderSeason(year) {
   html += `<p class="note">Tap a quarterback to see each game. Source: <a href="https://github.com/nflverse">nflverse</a> play-by-play.</p>`;
   $("main").innerHTML = html;
   wireRows();
+  wireTips();
 }
 
 function qbRow(q) {
@@ -435,15 +472,9 @@ function qbRow(q) {
     const cls = g.res === "W" || g.res === "L" ? g.res : "";
     const label = { goff: "G", DNP: "–", pending: "…", T: "T" }[g.res] || g.res;
     const wk = g.type === "REG" ? g.wk : g.type === "SB" ? "SB" : g.type;
-    const tip = `Week ${g.wk} vs ${g.opp}` + (g.score ? `, ${g.score}` : "") +
-      (g.att != null ? `, ${g.att} att` : "") +
-      (g.res === "goff" ? `, credited to ${g.credited} (${g.credited_att} att)` : "") +
-      ({ DNP: ", did not play", pending: ", awaiting data" }[g.res] || "") +
-      (g.tiebreak ? `, tied attempts with ${g.tiebreak}; starter wins tie` : "") +
-      (g.ruling ? `, ruling: ${g.ruling}` : "") +
-      (g.bye ? " (bye credited)" : "");
     const mark = g.ruling || g.tiebreak ? "mark" : "";
-    return `<div class="g ${cls} ${mark} ${g.type !== "REG" ? "post" : ""}" title="${tip}">${wk}<span>${label}</span></div>`;
+    return `<span class="g ${cls} ${mark} ${g.type !== "REG" ? "post" : ""}" tabindex="0"
+      data-tip="${esc(gameTip(q, g))}">${wk}<span>${label}</span></span>`;
   }).join("");
 
   return `<div class="qb ${q.subbed_out_after ? "out" : ""}">
@@ -456,6 +487,82 @@ function qbRow(q) {
     <div class="detail">${math}<div class="strip">${games}</div>
       <div class="legend">G = Goff rule (another QB threw more), – = did not play, gold underline = attempts tie or commissioner ruling, outlined = playoffs. Details under Scoring notes.</div></div>
   </div>`;
+}
+
+const ROUND = { WC: "Wild Card round", DIV: "Divisional round", CON: "Conference championship", SB: "Super Bowl" };
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+const last = (n) => (n || "").split(" ").slice(-1)[0];
+let H2H_KEYS = new Set(); // "date|id|id" for games that were TT13 vs Matt
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
+function gameTip(q, g) {
+  const when = (g.type === "REG" ? `Week ${g.wk}` : ROUND[g.type]) + (g.date ? `, ${fmtDate(g.date)}` : "");
+  let line = "";
+  if (g.score) {
+    const [us, them] = g.score.split("-").map(Number);
+    line = g.home ? `${g.opp} ${them} at ${g.team} ${us}` : `${g.team} ${us} at ${g.opp} ${them}`;
+  }
+  const outcome = { W: "Win", L: "Loss", T: "Tie (½ point)" };
+  let rows = [`<b>${when}</b>`];
+  if (line) rows.push(line);
+  if (g.res === "pending") rows.push("Waiting on play-by-play data.");
+  else if (g.res === "DNP") rows.push(`${last(q.name)} didn't play.`);
+  else if (g.res === "goff") {
+    rows.push(`${outcome[g.outcome]} credited to ${g.credited} (${g.credited_att} att). ${last(q.name)} threw ${g.att}, so it doesn't count for him.`);
+  } else {
+    rows.push(`<b>${outcome[g.res]}</b> for ${last(q.name)} (${g.att} att)`);
+    if (g.opp_qb) {
+      const vs = H2H_KEYS.has(`${g.date}|${q.id}|${g.opp_qb_id}`) ? " (TT13 vs Matt matchup)" : "";
+      rows.push(`Opposing QB: ${g.opp_qb} (${g.opp_att} att)${vs}`);
+    }
+  }
+  if (g.tiebreak) rows.push(`Tied attempts with ${g.tiebreak}; the starter gets the result.`);
+  if (g.ruling) rows.push(`Ruling: ${g.ruling}`);
+  if (g.bye) rows.push("Also credited with the first-round bye (+3).");
+  return rows.join("<br>");
+}
+
+// One floating card for every game square: hover or keyboard focus shows it,
+// tap toggles it on touch screens.
+function wireTips() {
+  let tip = $("tip");
+  if (!tip) {
+    tip = document.createElement("div");
+    tip.id = "tip"; tip.className = "tip"; tip.setAttribute("role", "tooltip"); tip.hidden = true;
+    document.body.appendChild(tip);
+    const show = (el) => {
+      tip.innerHTML = el.dataset.tip; tip.hidden = false;
+      const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect();
+      let x = r.left + r.width / 2 - t.width / 2, y = r.top - t.height - 8;
+      if (y < 8) y = r.bottom + 8;
+      x = Math.max(8, Math.min(x, window.innerWidth - t.width - 8));
+      tip.style.left = x + "px"; tip.style.top = y + "px";
+      tip.dataset.for = el.dataset.tip;
+      tip.dataset.at = Date.now();
+    };
+    const hide = () => { tip.hidden = true; tip.dataset.for = ""; };
+    // Touch screens fire fake hover events around a tap; ignore those so a
+    // tap opens the card and a tap elsewhere closes it.
+    let touchedAt = 0;
+    document.addEventListener("touchstart", () => { touchedAt = Date.now(); }, { passive: true, capture: true });
+    const touching = () => Date.now() - touchedAt < 1500;
+    document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-tip]"); if (el && !touching()) show(el); });
+    document.addEventListener("mouseout", (e) => { if (e.target.closest("[data-tip]") && !touching()) hide(); });
+    document.addEventListener("focusin", (e) => { const el = e.target.closest("[data-tip]"); if (el) show(el); });
+    document.addEventListener("focusout", hide);
+    document.addEventListener("click", (e) => {
+      const el = e.target.closest("[data-tip]");
+      if (!el) return hide();
+      show(el);
+    }, true);
+    // Ignore the scroll a tap causes when it focuses a square near the edge.
+    window.addEventListener("scroll", () => { if (Date.now() - (+tip.dataset.at || 0) > 500) hide(); }, { passive: true });
+  }
 }
 
 const AUDIT_LABELS = {
@@ -488,6 +595,73 @@ function wireRows() {
       btn.setAttribute("aria-expanded", open);
     };
   }
+}
+
+function recStr(r) { return `${r.w}-${r.l}${r.t ? "-" + r.t : ""}`; }
+
+function renderH2H() {
+  const games = data.head_to_head || [];
+  const [a, b] = data.managers;
+  const wins = { [a]: 0, [b]: 0 }, post = { [a]: 0, [b]: 0 };
+  let ties = 0;
+  for (const g of games) {
+    if (!g.winner) { ties++; continue; }
+    wins[g.winner]++;
+    if (g.type !== "REG") post[g.winner]++;
+  }
+  const seasons = [...new Set(games.map((g) => g.season))];
+  renderBoard(wins, "Head-to-head",
+    `${games.length} games where a TT13 QB faced a Matt QB, ${seasons[0]}–${seasons[seasons.length - 1]}` +
+    `${ties ? `, ${ties} tied` : ""}. Playoffs: ${a} ${post[a]}, ${b} ${post[b]}.`, "Leads head-to-head");
+
+  // Season-by-season split
+  const bySeason = seasons.map((y) => {
+    const gs = games.filter((g) => g.season === y);
+    const w = (m) => gs.filter((g) => g.winner === m).length;
+    return `<tr><th>${data.seasons[y].label}</th><td>${w(a)}</td><td>${w(b)}</td><td>${gs.filter((g) => !g.winner).length || ""}</td><td>${gs.length}</td></tr>`;
+  }).join("");
+  let html = `<section class="rules h2h-seasons"><h2>By season</h2>
+    <table><tr><th></th><td>${a} wins</td><td>${b} wins</td><td>Ties</td><td>Games</td></tr>${bySeason}</table>
+    <p class="eg">A game counts when both QBs were on their manager's roster that week and were credited with the result under the Goff rule. Playoff games are included.</p></section>`;
+
+  // Each QB's record while on a given manager's roster
+  html += data.managers.map((m) => {
+    const other = m === a ? b : a;
+    const stints = {};
+    for (const g of games) {
+      const id = g.ids[m];
+      const st = (stints[id] ??= { name: g.qbs[m], seasons: new Set(), w: 0, l: 0, t: 0, opps: {}, games: [] });
+      const res = !g.winner ? "T" : g.winner === m ? "W" : "L";
+      st[res.toLowerCase()]++;
+      st.seasons.add(g.season);
+      const o = (st.opps[g.ids[other]] ??= { name: g.qbs[other], w: 0, l: 0, t: 0 });
+      o[res.toLowerCase()]++;
+      st.games.push({ ...g, res });
+    }
+    const rows = Object.values(stints).sort((x, y) => (y.w + y.l + y.t) - (x.w + x.l + x.t) || y.w - x.w).map((st) => {
+      const yrs = [...st.seasons].map((y) => data.seasons[y].label);
+      const opps = Object.values(st.opps).sort((x, y) => (y.w + y.l + y.t) - (x.w + x.l + x.t))
+        .map((o) => `<li><span>vs ${o.name}</span><b>${recStr(o)}</b></li>`).join("");
+      const log = st.games.map((g) => {
+        const where = g.home === m ? `${g.teams[other]} ${g.score[other]} at ${g.teams[m]} ${g.score[m]}`
+                                   : `${g.teams[m]} ${g.score[m]} at ${g.teams[other]} ${g.score[other]}`;
+        const when = g.type === "REG" ? `Wk ${g.wk}` : ROUND[g.type];
+        return `<li class="${g.res}"><span>${fmtDate(g.date)}, ${when}: ${where}, vs ${g.qbs[other]}</span><b>${g.res}</b></li>`;
+      }).join("");
+      return `<div class="qb"><button aria-expanded="false">
+          <div><span class="name">${st.name}</span>
+            <div class="flags"><span class="flag">${yrs.length > 2 ? yrs[0] + " to " + yrs[yrs.length - 1] : yrs.join(", ")}</span></div></div>
+          <div class="rec">${st.w + st.l + st.t} games</div>
+          <div class="pts">${recStr(st)}</div></button>
+        <div class="detail"><ul class="opps">${opps}</ul><ul class="h2h-log">${log}</ul></div></div>`;
+    }).join("");
+    return `<section class="team ${wins[m] > wins[other] ? "lead" : ""}">
+      <header><h2>${m}'s QBs</h2><div><div class="sum">${recStr({ w: wins[m], l: wins[other], t: ties })}</div><small>vs ${other}</small></div></header>
+      ${rows}</section>`;
+  }).join("");
+  html += `<p class="note">A QB who played for both managers appears once under each, with only the games from that stint.</p>`;
+  $("main").innerHTML = html;
+  wireRows();
 }
 
 function renderRules() {
