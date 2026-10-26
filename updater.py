@@ -1,234 +1,273 @@
-import nfl_data_py as nfl
-import pandas as pd
+"""
+QB Draft Contest - standings generator.
+
+Reads drafts.json, pulls nflverse schedules + play-by-play, and writes
+standings.json for index.html.
+
+Scoring (from the league's Rules tab):
+  * 1 pt per regular-season win the QB is credited with.
+  * Regular-season points are halved (rounded down) if the QB's record is
+    below .500.
+  * 3 pts per playoff win (Super Bowl excluded); a first-round bye counts as
+    a playoff win.
+  * 5 pts for a Super Bowl win.
+  * "Goff rule": each game's result goes to whichever QB on that team threw
+    the most pass attempts. If tied, it goes to the starter.
+  * Bench swaps: the outgoing QB scores weeks 1..to_week, the incoming QB
+    scores from_week..end (including playoffs). Each is scored separately.
+"""
+
 import json
 import math
+from datetime import datetime, timezone
+from pathlib import Path
 
-# --- 1. LIFETIME CONTEST CONFIGURATION ---
-SEASONS = [2021, 2022, 2023, 2024, 2025]
+import nflreadpy as nfl
+import pandas as pd
 
-draft_history = {
-    2025: {
-        "P.Mahomes": {"manager": "TT13"},
-        "L.Jackson": {"manager": "TT13"},
-        "J.Burrow": {"manager": "TT13"},
-        "K.Murray": {"manager": "TT13"},
-        "J.Herbert": {"manager": "TT13"},
-        "C.Stroud": {"manager": "TT13"},
-        "J.Love": {"manager": "TT13"},
-        "B.Purdy": {"manager": "TT13", "active_weeks": range(1, 10)},
-        "S.Darnold": {"manager": "TT13", "active_weeks": range(10, 25), "byes": 1},
-        
-        "M.Stafford": {"manager": "Matt"},
-        "J.Allen": {"manager": "Matt"},
-        "J.Goff": {"manager": "Matt"},
-        "J.Daniels": {"manager": "Matt"},
-        "D.Maye": {"manager": "Matt"},
-        "J.Hurts": {"manager": "Matt"},
-        "B.Mayfield": {"manager": "Matt"},
-        "B.Nix": {"manager": "Matt", "byes": 1},
-    },
-    2024: {
-        "P.Mahomes": {"manager": "TT13", "byes": 1},
-        "L.Jackson": {"manager": "TT13"},
-        "J.Burrow": {"manager": "TT13"},
-        "T.Lawrence": {"manager": "TT13", "active_weeks": range(1, 10)},
-        "K.Murray": {"manager": "TT13", "active_weeks": range(10, 25)},
-        "A.Rodgers": {"manager": "TT13"},
-        "C.Stroud": {"manager": "TT13"},
-        "C.Williams": {"manager": "TT13"},
-        "B.Purdy": {"manager": "TT13"},
-        
-        "M.Stafford": {"manager": "Matt"},
-        "J.Allen": {"manager": "Matt"},
-        "J.Goff": {"manager": "Matt", "byes": 1},
-        "K.Cousins": {"manager": "Matt"},
-        "T.Tagovailoa": {"manager": "Matt"},
-        "J.Hurts": {"manager": "Matt"},
-        "J.Love": {"manager": "Matt"},
-        "J.Herbert": {"manager": "Matt"},
-    },
-    2023: {
-        "P.Mahomes": {"manager": "TT13"},
-        "L.Jackson": {"manager": "TT13", "byes": 1},
-        "J.Burrow": {"manager": "TT13"},
-        "T.Lawrence": {"manager": "TT13"},
-        "A.Rodgers": {"manager": "TT13"},
-        "B.Young": {"manager": "TT13"},
-        "D.Prescott": {"manager": "TT13"},
-        "B.Purdy": {"manager": "TT13", "byes": 1},
+ROOT = Path(__file__).parent
+CONFIG_PATH = ROOT / "drafts.json"
+OUTPUT_PATH = ROOT / "standings.json"
 
-        "R.Wilson": {"manager": "Matt"},
-        "J.Allen": {"manager": "Matt"},
-        "J.Goff": {"manager": "Matt"},
-        "K.Cousins": {"manager": "Matt"},
-        "D.Carr": {"manager": "Matt"},
-        "J.Hurts": {"manager": "Matt"},
-        "K.Pickett": {"manager": "Matt"},
-        "J.Herbert": {"manager": "Matt"},
-    },
-    2022: {
-        "P.Mahomes": {"manager": "TT13", "byes": 1},
-        "L.Jackson": {"manager": "TT13"},
-        "J.Burrow": {"manager": "TT13"},
-        "T.Lawrence": {"manager": "TT13"},
-        "A.Rodgers": {"manager": "TT13"},
-        "M.Stafford": {"manager": "TT13"},
-        "D.Prescott": {"manager": "TT13"},
-        "T.Brady": {"manager": "TT13"},
+FIRST_WEEK, LAST_WEEK = 1, 99  # open-ended default window
 
-        "R.Wilson": {"manager": "Matt"},
-        "J.Allen": {"manager": "Matt"},
-        "K.Murray": {"manager": "Matt"},
-        "K.Cousins": {"manager": "Matt"},
-        "D.Carr": {"manager": "Matt"},
-        "J.Hurts": {"manager": "Matt", "byes": 1},
-        "M.Jones": {"manager": "Matt"},
-        "J.Herbert": {"manager": "Matt"},
-    },
-    2021: {
-        "P.Mahomes": {"manager": "TT13"},
-        "L.Jackson": {"manager": "TT13"},
-        "J.Burrow": {"manager": "TT13"},
-        "T.Lawrence": {"manager": "TT13"},
-        "A.Rodgers": {"manager": "TT13", "byes": 1},
-        "M.Stafford": {"manager": "TT13"},
-        "B.Mayfield": {"manager": "TT13"},
-        "T.Brady": {"manager": "TT13"},
 
-        "R.Wilson": {"manager": "Matt"},
-        "J.Allen": {"manager": "Matt"},
-        "K.Murray": {"manager": "Matt"},
-        "T.Tagovailoa": {"manager": "Matt"},
-        "R.Tannehill": {"manager": "Matt", "byes": 1},
-        "J.Hurts": {"manager": "Matt"},
-        "M.Jones": {"manager": "Matt"},
-        "J.Herbert": {"manager": "Matt"},
-    }
-}
+# --------------------------------------------------------------------------
+# Per-game QB credit
+# --------------------------------------------------------------------------
+def credited_qbs(pbp: pd.DataFrame) -> pd.DataFrame:
+    """One row per (game_id, posteam): passer ids, attempts, and the QB
+    credited with the result under the Goff rule."""
+    has_passer = pbp["passer_player_id"].notna()
 
-def generate_standings():
-    scoreboard = {
-        "Matt": {"lifetime_points": 0, "seasons": {}},
-        "TT13": {"lifetime_points": 0, "seasons": {}}
-    }
+    # Official pass attempts: completions, incompletions, interceptions.
+    # Sacks and two-point tries are excluded; plays wiped out by penalty
+    # are already play_type == "no_play" and have no attempt flag.
+    att = pbp[
+        has_passer
+        & (pbp["pass_attempt"] == 1)
+        & (pbp["sack"] != 1)
+        & (pbp["two_point_attempt"] != 1)
+    ]
+    counts = (
+        att.groupby(["game_id", "posteam", "passer_player_id"])
+        .size()
+        .rename("attempts")
+        .reset_index()
+    )
 
-    for year in SEASONS:
-        print(f"Fetching {year} NFL Data...")
-        schedules = nfl.import_schedules([year])
-        pbp = nfl.import_pbp_data([year])
-        
-        drafts = draft_history[year]
-        completed_games = schedules[schedules['result'].notna()]
-        player_stats = {}
-        pass_plays = pbp[pbp['play_type'] == 'pass'].copy()
-        
-        for qb_name, qb_info in drafts.items():
-            qb_passes = pass_plays[pass_plays['passer_player_name'] == qb_name]
-            primary_team = qb_passes['posteam'].mode()[0] if not qb_passes.empty else None
-            
-            # Detect substitution flags based on active weeks
-            active_weeks = qb_info.get("active_weeks", range(1, 25))
-            
-            player_stats[qb_name] = {
-                "manager": qb_info["manager"], 
-                "team": primary_team,
-                "wins": 0, "losses": 0, 
-                "playoff_wins": 0, "sb_wins": 0,
-                "byes": qb_info.get("byes", 0),
-                "missed_games": 0, 
-                "goff_rule": 0,
-                "subbed_out": active_weeks == range(1, 10),
-                "subbed_in": active_weeks == range(10, 25)
-            }
-            
-        for _, game in completed_games.iterrows():
-            game_id = game['game_id']
-            game_week = game['week']
-            home_team = game['home_team']
-            away_team = game['away_team']
-            home_won = game['home_score'] > game['away_score']
-            is_playoff = game['game_type'] != 'REG'
-            is_sb = game['game_type'] == 'SB'
-            
-            game_passes = pass_plays[pass_plays['game_id'] == game_id]
-            
-            for qb_name, qb_info in drafts.items():
-                primary_team = player_stats[qb_name]["team"]
-                if not primary_team:
-                    continue 
-                    
-                if home_team == primary_team or away_team == primary_team:
-                    active_weeks = qb_info.get("active_weeks", range(1, 25)) 
-                    if game_week not in active_weeks:
-                        continue
-                        
-                    team_passes = game_passes[game_passes['posteam'] == primary_team]
-                    passer_counts = team_passes['passer_player_name'].value_counts()
-                    
-                    drafted_attempts = passer_counts.get(qb_name, 0)
-                    backups = passer_counts.drop(qb_name, errors='ignore')
-                    max_backup_attempts = backups.max() if not backups.empty else 0
-                    
-                    if drafted_attempts == 0:
-                        player_stats[qb_name]["missed_games"] += 1
-                    elif drafted_attempts >= max_backup_attempts:
-                        won_game = (home_won and home_team == primary_team) or (not home_won and away_team == primary_team)
-                        
-                        # FIX: Nested correctly so ONLY the winner gets playoff/SB points
-                        if won_game:
-                            if is_sb:
-                                player_stats[qb_name]["sb_wins"] += 1
-                            elif is_playoff:
-                                player_stats[qb_name]["playoff_wins"] += 1
-                            else:
-                                player_stats[qb_name]["wins"] += 1
-                        else:
-                            if not is_playoff and not is_sb:
-                                player_stats[qb_name]["losses"] += 1
-                    else:
-                        player_stats[qb_name]["goff_rule"] += 1
+    # Starter = QB on the team's first dropback with a named passer.
+    starters = (
+        pbp[has_passer]
+        .sort_values(["game_id", "play_id"])
+        .groupby(["game_id", "posteam"])["passer_player_id"]
+        .first()
+        .rename("starter_id")
+        .reset_index()
+    )
+    counts = counts.merge(starters, on=["game_id", "posteam"], how="left")
+    counts["is_starter"] = counts["passer_player_id"] == counts["starter_id"]
 
-        scoreboard["Matt"]["seasons"][year] = {"roster": [], "year_points": 0}
-        scoreboard["TT13"]["seasons"][year] = {"roster": [], "year_points": 0}
+    # Most attempts wins; the starter breaks ties.
+    counts = counts.sort_values(
+        ["game_id", "posteam", "attempts", "is_starter"],
+        ascending=[True, True, False, False],
+    )
+    counts["credited"] = ~counts.duplicated(["game_id", "posteam"])
+    return counts
 
-        for qb, stats in player_stats.items():
-            wins = stats["wins"]
-            losses = stats["losses"]
-            total_games = wins + losses
-            win_pct = (wins / total_games) if total_games > 0 else 0
-            
-            halved = win_pct < 0.500
-            reg_points = math.floor(wins / 2) if halved else wins
-            
-            playoff_pts = stats["playoff_wins"] * 3
-            bye_pts = stats["byes"] * 3
-            sb_pts = stats["sb_wins"] * 5
-            
-            total_points = reg_points + playoff_pts + bye_pts + sb_pts
-            manager = stats["manager"]
-            
-            scoreboard[manager]["seasons"][year]["roster"].append({
-                "name": qb,
-                "wins": wins,
-                "losses": losses,
-                "win_pct": round(win_pct, 3),
-                "halved": halved,
-                "reg_points": reg_points,
-                "playoff_wins": stats["playoff_wins"],
-                "sb_wins": stats["sb_wins"],
-                "byes": stats["byes"],
-                "missed_games": stats["missed_games"],
-                "goff_rule": stats["goff_rule"], 
-                "subbed_out": stats["subbed_out"],
-                "subbed_in": stats["subbed_in"],
-                "points": total_points
+
+def team_results(sched: pd.DataFrame) -> pd.DataFrame:
+    """One row per completed game per team, with its result."""
+    done = sched[sched["result"].notna()].copy()
+    rows = []
+    for _, g in done.iterrows():
+        for team, opp, pf, pa, home in (
+            (g.home_team, g.away_team, g.home_score, g.away_score, True),
+            (g.away_team, g.home_team, g.away_score, g.home_score, False),
+        ):
+            rows.append({
+                "game_id": g.game_id,
+                "week": int(g.week),
+                "game_type": g.game_type,
+                "team": team,
+                "opponent": opp,
+                "home": home,
+                "pf": int(pf),
+                "pa": int(pa),
+                "outcome": "W" if pf > pa else ("L" if pf < pa else "T"),
             })
-            scoreboard[manager]["seasons"][year]["year_points"] += total_points
-            scoreboard[manager]["lifetime_points"] += total_points
+    return pd.DataFrame(rows)
 
-    with open('standings.json', 'w') as f:
-        json.dump(scoreboard, f, indent=4)
-    print("All seasons successfully updated to standings.json!")
+
+def bye_teams(sched: pd.DataFrame) -> set:
+    """Teams that played a divisional-round game without a wild-card game."""
+    wc = set(sched.loc[sched.game_type == "WC", ["home_team", "away_team"]].values.ravel())
+    div = set(sched.loc[sched.game_type == "DIV", ["home_team", "away_team"]].values.ravel())
+    return div - wc if wc else set()
+
+
+# --------------------------------------------------------------------------
+# Scoring
+# --------------------------------------------------------------------------
+def score_qb(entry, games, credit, byes, team_by_week):
+    qb_id = entry["id"]
+    lo = entry.get("from_week", FIRST_WEEK)
+    hi = entry.get("to_week", LAST_WEEK)
+
+    mine = credit[credit.passer_player_id == qb_id].set_index(["game_id", "posteam"])
+    stats = {"wins": 0, "losses": 0, "ties": 0, "playoff_wins": 0, "sb_wins": 0,
+             "byes": 0, "missed_games": 0, "goff_rule": 0}
+    log = []
+
+    for _, g in games[(games.week >= lo) & (games.week <= hi)].iterrows():
+        key = (g.game_id, g.team)
+        team = team_by_week(g.week)
+        if g.team != team:
+            continue
+        if not g.has_pbp:
+            log.append({"wk": g.week, "type": g.game_type, "opp": g.opponent,
+                        "res": "pending"})
+            continue
+        if key not in mine.index:
+            if g.game_type == "REG":
+                stats["missed_games"] += 1
+            log.append({"wk": g.week, "type": g.game_type, "opp": g.opponent,
+                        "res": "DNP", "score": f"{g.pf}-{g.pa}"})
+            continue
+
+        row = mine.loc[key]
+        rec = {"wk": g.week, "type": g.game_type, "opp": g.opponent,
+               "score": f"{g.pf}-{g.pa}", "att": int(row.attempts)}
+        if not row.credited:
+            stats["goff_rule"] += 1
+            rec["res"] = "goff"
+        else:
+            rec["res"] = g.outcome
+            if g.game_type == "REG":
+                stats[{"W": "wins", "L": "losses", "T": "ties"}[g.outcome]] += 1
+            elif g.outcome == "W":
+                stats["sb_wins" if g.game_type == "SB" else "playoff_wins"] += 1
+            # A bye is credited to whoever is credited with the team's
+            # divisional-round game.
+            if g.game_type == "DIV" and g.team in byes:
+                stats["byes"] += 1
+                rec["bye"] = True
+        log.append(rec)
+
+    gp = stats["wins"] + stats["losses"] + stats["ties"]
+    win_pct = (stats["wins"] + 0.5 * stats["ties"]) / gp if gp else 0.0
+    halved = gp > 0 and win_pct < 0.5
+    reg_points = math.floor(stats["wins"] / 2) if halved else stats["wins"]
+    post_points = 3 * (stats["playoff_wins"] + stats["byes"]) + 5 * stats["sb_wins"]
+
+    return {
+        "name": entry["name"],
+        "id": qb_id,
+        "team": team_by_week(hi if hi < LAST_WEEK else 99),
+        "window": [lo, hi if hi < LAST_WEEK else None],
+        **stats,
+        "win_pct": round(win_pct, 3),
+        "halved": halved,
+        "reg_points": reg_points,
+        "post_points": post_points,
+        "points": reg_points + post_points,
+        "subbed_out_after": entry.get("to_week"),
+        "subbed_in_week": entry.get("from_week"),
+        "games": log,
+    }
+
+
+def team_lookup(qb_id, pbp):
+    """Return f(week) -> the team this QB was on, from his own pass plays."""
+    seen = (pbp[pbp.passer_player_id == qb_id]
+            .groupby("week")["posteam"].agg(lambda s: s.mode().iat[0])
+            .sort_index())
+    if seen.empty:
+        return lambda week: None
+    weeks, teams = list(seen.index), list(seen.values)
+
+    def f(week):
+        team = teams[0]
+        for w, t in zip(weeks, teams):
+            if w <= week:
+                team = t
+        return team
+    return f
+
+
+def build_season(year, cfg, managers):
+    print(f"Season {year}: loading data…")
+    sched = nfl.load_schedules([year]).to_pandas()
+    pbp = nfl.load_pbp([year]).to_pandas()
+
+    credit = credited_qbs(pbp)
+    games = team_results(sched)
+    games["has_pbp"] = games.game_id.isin(set(pbp.game_id))
+    byes = bye_teams(sched)
+
+    reg = sched[sched.game_type == "REG"]
+    done_reg = reg[reg.result.notna()]
+    season_over = (sched.game_type == "SB").any() and sched.loc[sched.game_type == "SB", "result"].notna().all()
+
+    out = {
+        "label": cfg.get("label", str(year)),
+        "stakes": cfg.get("stakes"),
+        "status": "final" if season_over else "in_progress",
+        "through_week": int(done_reg.week.max()) if not done_reg.empty else 0,
+        "pending_games": int((~games.has_pbp).sum() // 2),
+        "bench": cfg.get("bench"),
+        "managers": {},
+    }
+    for m in managers:
+        roster = [score_qb(e, games, credit, byes, team_lookup(e["id"], pbp))
+                  for e in cfg["rosters"][m]]
+        out["managers"][m] = {
+            "points": sum(q["points"] for q in roster),
+            "roster": roster,
+        }
+    return out
+
+
+def main():
+    config = json.loads(CONFIG_PATH.read_text())
+    managers = config["managers"]
+    seasons = {}
+    for year, cfg in sorted(config["seasons"].items()):
+        seasons[year] = build_season(int(year), cfg, managers)
+
+    lifetime = {m: sum(s["managers"][m]["points"] for s in seasons.values()) for m in managers}
+    season_wins = {m: 0 for m in managers}
+    for s in seasons.values():
+        if s["status"] != "final":
+            continue
+        pts = {m: s["managers"][m]["points"] for m in managers}
+        top = max(pts.values())
+        leaders = [m for m, p in pts.items() if p == top]
+        if len(leaders) == 1:
+            season_wins[leaders[0]] += 1
+
+    result = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="minutes"),
+        "managers": managers,
+        "lifetime_points": lifetime,
+        "season_wins": season_wins,
+        "seasons": seasons,
+    }
+
+    # Only touch the file if the standings themselves changed, so the
+    # workflow doesn't commit a new timestamp every run.
+    if OUTPUT_PATH.exists():
+        old = json.loads(OUTPUT_PATH.read_text())
+        old.pop("generated_at", None)
+        new = dict(result)
+        new.pop("generated_at")
+        if old == json.loads(json.dumps(new)):
+            print("No changes.")
+            return
+    OUTPUT_PATH.write_text(json.dumps(result, indent=1, default=int))
+    print(f"Wrote {OUTPUT_PATH.name}: " + ", ".join(f"{m} {p}" for m, p in lifetime.items()))
+
 
 if __name__ == "__main__":
-    generate_standings()
+    main()

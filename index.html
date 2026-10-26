@@ -1,418 +1,428 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QB Draft Contest Tracker</title>
-    <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-        position: relative;
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QB Draft Contest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #002244;
+    --navy-2: #0b3460;
+    --turf: #2e6b3f;
+    --turf-soft: #e3f0e6;
+    --flag: #b3261e;
+    --flag-soft: #fbe6e4;
+    --paper: #f3f5f8;
+    --card: #ffffff;
+    --ink: #16212e;
+    --muted: #5b6878;
+    --line: #dde3ea;
+    --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16px/1.45 var(--body);
+  }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid #4d8fd6; outline-offset: 2px; }
+
+  /* ---------- Scoreboard ---------- */
+  .board {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 16px 22px;
+    text-align: center;
+  }
+  .board h1 {
+    margin: 0 0 18px;
+    font: 700 1.05rem/1 var(--cond);
+    letter-spacing: 0.04em;
+    color: #b9c9dc;
+  }
+  .matchup {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .side { display: flex; flex-direction: column; align-items: center; }
+  .side .who { font: 700 1.4rem/1 var(--cond); }
+  .side .pts {
+    font: 800 clamp(4rem, 16vw, 6.5rem)/0.95 var(--cond);
+    font-variant-numeric: tabular-nums;
+  }
+  .side.lead .pts { color: #9fe0ae; }
+  .side .tag {
+    font: 600 0.8rem/1 var(--body);
+    margin-top: 6px;
+    min-height: 1em;
+    color: #9fe0ae;
+  }
+  .vs { font: 500 1rem var(--cond); color: #7f97b3; }
+  .status {
+    margin-top: 16px;
+    font-size: 0.92rem;
+    color: #b9c9dc;
+  }
+  .totals {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--navy-2);
+    font-size: 0.92rem;
+    color: #d4deea;
+  }
+  .totals b { font: 700 1.15rem var(--cond); color: #fff; }
+
+  /* ---------- Season tabs ---------- */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 14px 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    scrollbar-width: none;
+  }
+  .tabs button {
+    flex: 0 0 auto;
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font: 600 0.95rem var(--cond);
+    cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+
+  /* ---------- Rosters ---------- */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 20px;
+  }
+  .team {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .team.lead { border-color: var(--turf); box-shadow: inset 0 4px 0 var(--turf); }
+  .team header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 16px 18px 10px;
+  }
+  .team h2 { margin: 0; font: 700 1.6rem/1 var(--cond); }
+  .team header .sum { font: 800 1.9rem/1 var(--cond); font-variant-numeric: tabular-nums; }
+  .team header small { display: block; text-align: right; color: var(--muted); font-size: 0.8rem; }
+
+  .qb { border-top: 1px solid var(--line); }
+  .qb > button {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 14px;
+    align-items: center;
+    padding: 11px 18px;
+    cursor: pointer;
+  }
+  .qb > button:hover { background: #f8fafc; }
+  .qb > button:focus-visible { outline: 3px solid #4d8fd6; outline-offset: -3px; }
+  .qb .name { font: 700 1.15rem/1.15 var(--cond); }
+  .qb .team-abbr { color: var(--muted); font: 500 0.95rem var(--cond); margin-left: 4px; }
+  .qb .flags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+  .flag {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--muted);
+  }
+  .flag.bad { background: var(--flag-soft); color: var(--flag); }
+  .flag.good { background: var(--turf-soft); color: var(--turf); }
+  .qb .rec { font: 500 1.05rem var(--cond); color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  .qb .pts { font: 800 1.6rem/1 var(--cond); min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; }
+  .qb.out .name, .qb.out .pts { color: var(--muted); }
+
+  .detail { display: none; padding: 2px 18px 16px; font-size: 0.9rem; color: var(--muted); }
+  .qb.open .detail { display: block; }
+  .math { margin: 0 0 10px; }
+  .math b { color: var(--ink); }
+  .strip { display: flex; flex-wrap: wrap; gap: 4px; }
+  .g {
+    width: 38px;
+    border-radius: 4px;
+    text-align: center;
+    padding: 3px 0 2px;
+    font: 600 0.72rem/1.1 var(--body);
+    background: var(--paper);
+    color: var(--muted);
+  }
+  .g span { display: block; font: 800 0.95rem/1 var(--cond); }
+  .g.W { background: var(--turf-soft); color: var(--turf); }
+  .g.L { background: var(--flag-soft); color: var(--flag); }
+  .g.post { outline: 2px solid var(--navy); outline-offset: -2px; }
+  .legend { margin-top: 8px; font-size: 0.78rem; }
+
+  .bench {
+    grid-column: 1 / -1;
+    background: var(--card);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .bench h3 { margin: 0 0 6px; font: 700 1.15rem var(--cond); color: var(--ink); }
+  .bench p { margin: 4px 0; }
+
+  .all-row > button { grid-template-columns: 1fr auto; }
+
+  .note { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  .note a { color: inherit; }
+
+  /* ---------- TT13's sticker (by request) ---------- */
+  .tt13-special {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive;
+    font-size: 11px;
+    line-height: 1.3;
+    color: #ff00ff;
+    background: #ccff00;
+    border: 3px dashed #00ffff;
+    padding: 5px;
+    transform: rotate(-15deg);
+    box-shadow: 3px 3px 0 #ff0000;
+    z-index: 10;
+    animation: vibrate 0.3s linear infinite both;
+  }
+  @keyframes vibrate {
+    0%,100% { transform: rotate(-15deg) translate(0,0); }
+    20% { transform: rotate(-17deg) translate(-1px,1px); }
+    40% { transform: rotate(-13deg) translate(-1px,-1px); }
+    60% { transform: rotate(-17deg) translate(1px,1px); }
+    80% { transform: rotate(-13deg) translate(1px,-1px); }
+  }
+  @media (max-width: 640px) {
+    .tt13-special { position: static; display: inline-block; margin: 4px 0 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tt13-special { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <section class="board" aria-live="polite">
+    <div class="tt13-special" id="sticker" hidden></div>
+    <h1>TT13 vs Matt: QB Draft Contest</h1>
+    <div class="matchup" id="matchup">Loading standings…</div>
+    <div class="status" id="status"></div>
+    <div class="totals" id="totals"></div>
+  </section>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Season"></nav>
+  <main id="main"></main>
+
+<script>
+let data;
+const $ = (id) => document.getElementById(id);
+
+fetch("standings.json", { cache: "no-cache" })
+  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then((d) => {
+    data = d;
+    buildChrome();
+    const years = Object.keys(d.seasons).sort();
+    const fromHash = location.hash.slice(1);
+    select(d.seasons[fromHash] || fromHash === "all" ? fromHash : years[years.length - 1]);
+  })
+  .catch((e) => {
+    $("matchup").textContent = "Couldn't load standings.json. Refresh to try again.";
+    console.error(e);
+  });
+
+function buildChrome() {
+  const [a, b] = data.managers;
+  const w = data.season_wins;
+  const s = $("sticker");
+  s.innerHTML = `OFFICIAL SEASON WINS<br>${b}: ${w[b]}<br>${a}: ${w[a]}<br>🤪🤪🤪`;
+  s.hidden = false;
+
+  const lt = data.lifetime_points;
+  $("totals").innerHTML =
+    `<span>Lifetime points: <b>${a} ${lt[a]}</b> to <b>${b} ${lt[b]}</b></span>` +
+    `<span>Seasons won: <b>${a} ${w[a]}</b> to <b>${b} ${w[b]}</b></span>`;
+
+  const tabs = Object.keys(data.seasons).sort().reverse().map((y) =>
+    `<button role="tab" data-key="${y}">${data.seasons[y].label}</button>`);
+  tabs.push(`<button role="tab" data-key="all">All-time</button>`);
+  $("tabs").innerHTML = tabs.join("");
+  $("tabs").onclick = (e) => { const k = e.target.dataset.key; if (k) select(k); };
+}
+
+window.addEventListener("hashchange", () => {
+  const k = location.hash.slice(1);
+  if (data && (data.seasons[k] || k === "all")) select(k);
+});
+
+function select(key) {
+  history.replaceState(null, "", "#" + key);
+  for (const b of $("tabs").children) b.setAttribute("aria-selected", b.dataset.key === key);
+  key === "all" ? renderAllTime() : renderSeason(key);
+}
+
+function leaderOf(pts) {
+  const [a, b] = data.managers;
+  return pts[a] === pts[b] ? null : pts[a] > pts[b] ? a : b;
+}
+
+function renderBoard(pts, title, status, finalTag) {
+  const lead = leaderOf(pts);
+  $("matchup").innerHTML = data.managers.map((m, i) => `
+    ${i ? '<div class="vs">vs</div>' : ""}
+    <div class="side ${m === lead ? "lead" : ""}">
+      <div class="who">${m}</div>
+      <div class="pts">${pts[m]}</div>
+      <div class="tag">${m === lead ? finalTag : ""}</div>
+    </div>`).join("");
+  $("status").textContent = status;
+}
+
+function renderSeason(year) {
+  const s = data.seasons[year];
+  const pts = Object.fromEntries(data.managers.map((m) => [m, s.managers[m].points]));
+  const live = s.status !== "final";
+  const updated = new Date(data.generated_at).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  renderBoard(pts, s.label,
+    live ? `${s.label} season, through Week ${s.through_week}. Updated ${updated}.`
+         : `${s.label} season, final.${s.stakes ? " Stakes: " + s.stakes + "." : ""}`,
+    live ? "Leading" : "Season winner");
+
+  const lead = leaderOf(pts);
+  let html = data.managers.map((m) => {
+    const md = s.managers[m];
+    const rows = [...md.roster].sort((a, b) => b.points - a.points).map(qbRow).join("");
+    return `<section class="team ${m === lead ? "lead" : ""}">
+      <header><h2>${m}</h2><div><div class="sum">${md.points}</div><small>points</small></div></header>
+      ${rows}</section>`;
+  }).join("");
+
+  if (live && s.bench) {
+    html += `<div class="bench"><h3>Benches</h3>
+      ${data.managers.map((m) => `<p><b>${m}</b> can swap in: ${(s.bench[m] || []).join(", ")}</p>`).join("")}
+      <p>One swap per side, locked in before Week 10. The outgoing QB keeps Weeks 1–9; the new QB scores from Week 10 on.</p></div>`;
+  }
+  html += `<p class="note">Tap a quarterback to see each game. Source: <a href="https://github.com/nflverse">nflverse</a> play-by-play.</p>`;
+  $("main").innerHTML = html;
+  wireRows();
+}
+
+function qbRow(q) {
+  const flags = [];
+  if (q.halved) flags.push(`<span class="flag bad">Under .500, halved</span>`);
+  if (q.subbed_out_after) flags.push(`<span class="flag">Benched after Wk ${q.subbed_out_after}</span>`);
+  if (q.subbed_in_week) flags.push(`<span class="flag">Swapped in Wk ${q.subbed_in_week}</span>`);
+  if (q.byes) flags.push(`<span class="flag good">Bye</span>`);
+  if (q.playoff_wins) flags.push(`<span class="flag good">${q.playoff_wins} playoff W</span>`);
+  if (q.sb_wins) flags.push(`<span class="flag good">Super Bowl</span>`);
+
+  const rec = `${q.wins}-${q.losses}${q.ties ? "-" + q.ties : ""}`;
+  const post = [];
+  if (q.byes) post.push(`bye ${3 * q.byes}`);
+  if (q.playoff_wins) post.push(`playoff wins ${3 * q.playoff_wins}`);
+  if (q.sb_wins) post.push(`Super Bowl ${5 * q.sb_wins}`);
+
+  const math = `<p class="math"><b>${q.wins}</b> regular-season win${q.wins === 1 ? "" : "s"}` +
+    (q.halved ? `, halved and rounded down to <b>${q.reg_points}</b>` : "") +
+    (post.length ? `, plus ${post.join(", ")}` : "") + ` = <b>${q.points}</b>.` +
+    (q.goff_rule ? ` Goff rule took ${q.goff_rule} game${q.goff_rule > 1 ? "s" : ""} away.` : "") +
+    (q.missed_games ? ` Missed ${q.missed_games}.` : "") + `</p>`;
+
+  const games = q.games.map((g) => {
+    const cls = g.res === "W" || g.res === "L" ? g.res : "";
+    const label = { goff: "G", DNP: "–", pending: "…", T: "T" }[g.res] || g.res;
+    const wk = g.type === "REG" ? g.wk : g.type === "SB" ? "SB" : g.type;
+    const tip = `Week ${g.wk} vs ${g.opp}` + (g.score ? `, ${g.score}` : "") +
+      (g.att != null ? `, ${g.att} att` : "") +
+      ({ goff: ", backup threw more", DNP: ", did not play", pending: ", awaiting data" }[g.res] || "") +
+      (g.bye ? " (bye credited)" : "");
+    return `<div class="g ${cls} ${g.type !== "REG" ? "post" : ""}" title="${tip}">${wk}<span>${label}</span></div>`;
+  }).join("");
+
+  return `<div class="qb ${q.subbed_out_after ? "out" : ""}">
+    <button aria-expanded="false">
+      <div><span class="name">${q.name}</span><span class="team-abbr">${q.team || ""}</span>
+        ${flags.length ? `<div class="flags">${flags.join("")}</div>` : ""}</div>
+      <div class="rec">${rec}</div>
+      <div class="pts">${q.points}</div>
+    </button>
+    <div class="detail">${math}<div class="strip">${games}</div>
+      <div class="legend">G = Goff rule (backup threw more), – = did not play. Outlined = playoffs.</div></div>
+  </div>`;
+}
+
+function wireRows() {
+  for (const btn of document.querySelectorAll(".qb > button")) {
+    btn.onclick = () => {
+      const open = btn.parentElement.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open);
+    };
+  }
+}
+
+function renderAllTime() {
+  const lt = data.lifetime_points;
+  renderBoard(lt, "All-time", `All seasons combined, ${Object.keys(data.seasons).length} drafts.`, "All-time leader");
+  const lead = leaderOf(lt);
+
+  $("main").innerHTML = data.managers.map((m) => {
+    const agg = {};
+    for (const [y, s] of Object.entries(data.seasons)) {
+      for (const q of s.managers[m].roster) {
+        const a = (agg[q.id] ??= { name: q.name, w: 0, l: 0, t: 0, po: 0, byes: 0, sb: 0, pts: 0, years: [] });
+        a.w += q.wins; a.l += q.losses; a.t += q.ties;
+        a.po += q.playoff_wins; a.byes += q.byes; a.sb += q.sb_wins; a.pts += q.points;
+        if (!a.years.includes(y)) a.years.push(y);
       }
-      .header {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .lifetime-score {
-        background: #002244;
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        display: inline-block;
-        margin-bottom: 20px;
-      }
-      .controls {
-        text-align: center;
-        margin: 0 auto 30px auto;
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        width: fit-content;
-      }
-      select {
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        margin: 0 10px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-      }
-      .dashboard {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-      .team-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 48%;
-        padding: 20px;
-        min-width: 350px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-      }
-      th,
-      td {
-        padding: 12px 10px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        vertical-align: top;
-      }
-      th {
-        background-color: #002244;
-        color: white;
-      }
-      .total-row {
-        font-weight: bold;
-        font-size: 1.2em;
-        background-color: #e9ecef;
-      }
-      .winner {
-        border: 4px solid #28a745;
-        position: relative;
-      }
-      .winner::after {
-        content: "SEASON WINNER";
-        position: absolute;
-        top: -15px;
-        right: 20px;
-        background: #28a745;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
-      }
-
-      /* Math Breakdown Styles */
-      .math-breakdown {
-        font-size: 0.85em;
-        color: #555;
-        line-height: 1.5;
-      }
-      .math-breakdown b {
-        color: #222;
-      }
-      .penalty {
-        color: #d9534f;
-        font-weight: bold;
-      }
-      .pts-badge {
-        float: right;
-        font-weight: bold;
-        color: #002244;
-      }
-      .sub-badge {
-        display: block;
-        font-size: 0.8em;
-        margin-top: 4px;
-        padding: 2px 6px;
-        border-radius: 4px;
-        display: inline-block;
-      }
-      .sub-out {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-      }
-      .sub-in {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-
-      /* TT13's Goofy Request */
-      .tt13-special {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive;
-        font-size: 11px;
-        color: #ff00ff;
-        background-color: #ccff00;
-        border: 3px dashed #00ffff;
-        padding: 5px;
-        transform: rotate(-15deg);
-        box-shadow: 3px 3px 0px #ff0000;
-        z-index: 1000;
-        animation: vibrate 0.3s linear infinite both;
-      }
-
-      @keyframes vibrate {
-        0% {
-          transform: rotate(-15deg) translate(0, 0);
-        }
-        20% {
-          transform: rotate(-17deg) translate(-1px, 1px);
-        }
-        40% {
-          transform: rotate(-13deg) translate(-1px, -1px);
-        }
-        60% {
-          transform: rotate(-17deg) translate(1px, 1px);
-        }
-        80% {
-          transform: rotate(-13deg) translate(1px, -1px);
-        }
-        100% {
-          transform: rotate(-15deg) translate(0, 0);
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="tt13-special">
-      OFFICIAL SEASON WINS<br />
-      TT13: 3<br />
-      Matt: 2<br />
-      🤪🤪🤪
-    </div>
-
-    <div class="header">
-      <h1>QB Drafts Contest Tracker</h1>
-      <div class="lifetime-score" id="lifetimeScore">
-        Loading Lifetime Stats...
-      </div>
-    </div>
-
-    <div class="controls" style="text-align: center">
-      <label for="viewSelect"><strong>View Mode:</strong> </label>
-      <select id="viewSelect" onchange="toggleViewMode(this.value)">
-        <option value="single">Single Season</option>
-        <option value="alltime">All-Time Lifetime Stats</option>
-      </select>
-
-      <span id="seasonSelectorSpan">
-        <label for="seasonSelect" style="margin-left: 20px"
-          ><strong>Season:</strong>
-        </label>
-        <select id="seasonSelect" onchange="renderSeason(this.value)">
-          <option value="2025">2025-2026</option>
-          <option value="2024">2024-2025</option>
-          <option value="2023">2023-2024</option>
-          <option value="2022">2022-2023</option>
-          <option value="2021">2021-2022</option>
-        </select>
-      </span>
-    </div>
-
-    <div class="dashboard" id="dashboard">
-      <p>Loading latest NFL data...</p>
-    </div>
-
-    <script>
-      let appData = {};
-
-      fetch("standings.json")
-        .then((response) => response.json())
-        .then((data) => {
-          appData = data;
-          document.getElementById("lifetimeScore").innerHTML = `
-                <h2>Lifetime Scoreboard</h2>
-                <h3>Matt: ${data.Matt.lifetime_points} | TT13: ${data.TT13.lifetime_points}</h3>
-            `;
-          renderSeason(document.getElementById("seasonSelect").value);
-        })
-        .catch((error) => {
-          document.getElementById("dashboard").innerHTML =
-            `<p style="color:red;">Error loading data.</p>`;
-          console.error("Error fetching standings:", error);
-        });
-
-      function toggleViewMode(mode) {
-        if (mode === "single") {
-          document.getElementById("seasonSelectorSpan").style.display =
-            "inline";
-          renderSeason(document.getElementById("seasonSelect").value);
-        } else {
-          document.getElementById("seasonSelectorSpan").style.display = "none";
-          renderAllTime();
-        }
-      }
-
-      function renderSeason(year) {
-        const dashboard = document.getElementById("dashboard");
-        dashboard.innerHTML = "";
-
-        if (!appData.Matt.seasons[year]) {
-          dashboard.innerHTML = `<p>No data entered for the ${year} season yet.</p>`;
-          return;
-        }
-
-        let maxPoints = -1;
-        let leader = "";
-
-        for (const manager of ["Matt", "TT13"]) {
-          let pts = appData[manager].seasons[year].year_points;
-          if (pts > maxPoints) {
-            maxPoints = pts;
-            leader = manager;
-          }
-        }
-
-        for (const managerName of ["Matt", "TT13"]) {
-          let managerData = appData[managerName].seasons[year];
-          let isWinnerClass = managerName === leader ? "winner" : "";
-
-          let tableHTML = `
-                <div class="team-card ${isWinnerClass}">
-                    <h2>${managerName}'s Team (${year})</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 25%;">Player</th>
-                                <th style="width: 60%;">Points Breakdown</th>
-                                <th style="width: 15%; text-align: center;">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-          managerData.roster.forEach((player) => {
-            let postSeasonPts =
-              player.byes * 3 + player.playoff_wins * 3 + player.sb_wins * 5;
-
-            let subBadgeHTML = "";
-            if (player.subbed_out)
-              subBadgeHTML = `<span class="sub-badge sub-out">Subbed Out (Wk 10)</span>`;
-            else if (player.subbed_in)
-              subBadgeHTML = `<span class="sub-badge sub-in">Subbed In (Wk 10)</span>`;
-
-            let mathBreakdown = `
-                    <div class="math-breakdown">
-                        <div><b>Reg. Season (${player.wins}W - ${player.losses}L):</b> 
-                            ${player.halved ? `<span class="penalty">Sub-.500 Penalty!</span>` : ``} 
-                            <span class="pts-badge">+${player.reg_points}</span>
-                        </div>
-                        <div><b>Postseason (${player.byes} Byes, ${player.playoff_wins}W, ${player.sb_wins} SB):</b>
-                            <span class="pts-badge">+${postSeasonPts}</span>
-                        </div>
-                        <div style="border-top: 1px dashed #ccc; margin-top: 4px; padding-top: 4px;">
-                            <i>Missed Games (Injury/DNP): ${player.missed_games}</i><br>
-                            <i>Goff Rule Triggered (Out-passed by backup): ${player.goff_rule}</i>
-                        </div>
-                    </div>
-                `;
-
-            tableHTML += `
-                    <tr>
-                        <td><strong>${player.name}</strong>${subBadgeHTML}</td>
-                        <td>${mathBreakdown}</td>
-                        <td style="font-size: 1.3em; font-weight: bold; text-align: center; vertical-align: middle;">${player.points}</td>
-                    </tr>
-                `;
-          });
-
-          tableHTML += `
-                        <tr class="total-row">
-                            <td colspan="2" style="text-align: right;">Total Score:</td>
-                            <td style="text-align: center;">${managerData.year_points}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-          dashboard.innerHTML += tableHTML;
-        }
-      }
-
-      // --- NEW ALL-TIME AGGREGATION LOGIC ---
-      function renderAllTime() {
-        const dashboard = document.getElementById("dashboard");
-        dashboard.innerHTML = "";
-
-        // 1. Aggregate the stats
-        let allTimeData = { Matt: {}, TT13: {} };
-
-        for (const manager of ["Matt", "TT13"]) {
-          for (const year in appData[manager].seasons) {
-            appData[manager].seasons[year].roster.forEach((player) => {
-              if (!allTimeData[manager][player.name]) {
-                allTimeData[manager][player.name] = {
-                  name: player.name,
-                  wins: 0,
-                  losses: 0,
-                  playoff_wins: 0,
-                  byes: 0,
-                  sb_wins: 0,
-                  points: 0,
-                  seasons_played: 0,
-                };
-              }
-              let qb = allTimeData[manager][player.name];
-              qb.wins += player.wins;
-              qb.losses += player.losses;
-              qb.playoff_wins += player.playoff_wins;
-              qb.byes += player.byes;
-              qb.sb_wins += player.sb_wins;
-              qb.points += player.points;
-              qb.seasons_played += 1;
-            });
-          }
-        }
-
-        // 2. Render the All-Time tables
-        for (const manager of ["Matt", "TT13"]) {
-          // Convert object to array and sort by total points descending
-          let qbArray = Object.values(allTimeData[manager]);
-          qbArray.sort((a, b) => b.points - a.points);
-
-          let tableHTML = `
-                <div class="team-card">
-                    <h2>${manager}'s All-Time QBs</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 20%;">Player</th>
-                                <th style="width: 65%;">Career Breakdown</th>
-                                <th style="width: 15%; text-align: center;">Total Pts</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-          qbArray.forEach((qb) => {
-            let postSeasonW = qb.playoff_wins + qb.byes;
-            let mathBreakdown = `
-                    <div class="math-breakdown">
-                        <div><b>Seasons Drafted:</b> ${qb.seasons_played}</div>
-                        <div><b>Reg. Season Record:</b> ${qb.wins}W - ${qb.losses}L</div>
-                        <div><b>Postseason Record:</b> ${postSeasonW}W (${qb.byes} Byes)</div>
-                        <div><b>Super Bowls:</b> ${qb.sb_wins}</div>
-                    </div>
-                `;
-
-            tableHTML += `
-                    <tr>
-                        <td><strong>${qb.name}</strong></td>
-                        <td>${mathBreakdown}</td>
-                        <td style="font-size: 1.3em; font-weight: bold; text-align: center; vertical-align: middle;">${qb.points}</td>
-                    </tr>
-                `;
-          });
-
-          tableHTML += `
-                        <tr class="total-row">
-                            <td colspan="2" style="text-align: right;">Lifetime Total:</td>
-                            <td style="text-align: center;">${appData[manager].lifetime_points}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            `;
-          dashboard.innerHTML += tableHTML;
-        }
-      }
-    </script>
-  </body>
+    }
+    const rows = Object.values(agg).sort((a, b) => b.pts - a.pts).map((a) => `
+      <div class="qb all-row"><button tabindex="-1" style="cursor:default">
+        <div><span class="name">${a.name}</span>
+          <div class="flags"><span class="flag">${a.years.length} season${a.years.length > 1 ? "s" : ""}</span>
+          <span class="flag">${a.w}-${a.l}${a.t ? "-" + a.t : ""} reg.</span>
+          ${a.po + a.byes ? `<span class="flag good">${a.po} playoff W, ${a.byes} bye</span>` : ""}
+          ${a.sb ? `<span class="flag good">${a.sb} Super Bowl</span>` : ""}</div></div>
+        <div class="pts">${a.pts}</div></button></div>`).join("");
+    return `<section class="team ${m === lead ? "lead" : ""}">
+      <header><h2>${m}</h2><div><div class="sum">${lt[m]}</div><small>lifetime</small></div></header>${rows}</section>`;
+  }).join("");
+}
+</script>
+</body>
 </html>

@@ -2,32 +2,41 @@ name: Update QB Standings
 
 on:
   schedule:
-    # Runs at 12:00 UTC (8:00 AM EST) every Tuesday morning
-    - cron: '0 12 * * 2' 
-  workflow_dispatch: # Adds a button so you can run it manually anytime
+    # nflverse refreshes play-by-play overnight, so run each morning after
+    # game nights (11:23 UTC = 7:23 AM ET in-season): Fri (TNF), Mon (Sunday
+    # slate + SNF), Tue (MNF). Off-minute avoids GitHub's top-of-hour backlog.
+    - cron: '23 11 * * 1,2,5'
+  workflow_dispatch: # "Run workflow" button for manual updates
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-standings
+  cancel-in-progress: false
 
 jobs:
   update-data:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
+          cache: pip
 
-      - name: Install Libraries
-        run: pip install pandas nfl_data_py
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Run the Python Script
+      - name: Rebuild standings
         run: python updater.py
 
-      - name: Commit and Push Changes
+      - name: Commit if standings changed
         run: |
           git config user.name "NFL Stat Bot"
           git config user.email "actions@users.noreply.github.com"
           git add standings.json
-          git commit -m "Automated Tuesday update of NFL standings" || exit 0
+          git diff --cached --quiet && { echo "No changes"; exit 0; }
+          git commit -m "Update standings ($(date -u +%Y-%m-%d))"
           git push

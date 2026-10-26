@@ -1,0 +1,168 @@
+{
+  "_comment": "Season config. To add a season: copy the newest block, update rosters. Player ids are nflverse gsis_ids (see README). A mid-season bench swap is recorded with to_week on the outgoing QB and from_week on the incoming one.",
+  "managers": ["Matt", "TT13"],
+  "seasons": {
+    "2021": {
+      "label": "2021-22",
+      "stakes": "$100",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Trevor Lawrence", "id": "00-0036971"},
+          {"name": "Aaron Rodgers", "id": "00-0023459"},
+          {"name": "Matthew Stafford", "id": "00-0026498"},
+          {"name": "Baker Mayfield", "id": "00-0034855"},
+          {"name": "Tom Brady", "id": "00-0019596"}
+        ],
+        "Matt": [
+          {"name": "Russell Wilson", "id": "00-0029263"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Kyler Murray", "id": "00-0035228"},
+          {"name": "Tua Tagovailoa", "id": "00-0036212"},
+          {"name": "Ryan Tannehill", "id": "00-0029701"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Mac Jones", "id": "00-0036972"},
+          {"name": "Justin Herbert", "id": "00-0036355"}
+        ]
+      }
+    },
+    "2022": {
+      "label": "2022-23",
+      "stakes": "$120",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Trevor Lawrence", "id": "00-0036971"},
+          {"name": "Aaron Rodgers", "id": "00-0023459"},
+          {"name": "Matthew Stafford", "id": "00-0026498"},
+          {"name": "Dak Prescott", "id": "00-0033077"},
+          {"name": "Tom Brady", "id": "00-0019596"}
+        ],
+        "Matt": [
+          {"name": "Russell Wilson", "id": "00-0029263"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Kyler Murray", "id": "00-0035228"},
+          {"name": "Kirk Cousins", "id": "00-0029604"},
+          {"name": "Derek Carr", "id": "00-0031280"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Mac Jones", "id": "00-0036972"},
+          {"name": "Justin Herbert", "id": "00-0036355"}
+        ]
+      }
+    },
+    "2023": {
+      "label": "2023-24",
+      "stakes": "Dinner",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Trevor Lawrence", "id": "00-0036971"},
+          {"name": "Aaron Rodgers", "id": "00-0023459"},
+          {"name": "Bryce Young", "id": "00-0039150"},
+          {"name": "Dak Prescott", "id": "00-0033077"},
+          {"name": "Brock Purdy", "id": "00-0037834"}
+        ],
+        "Matt": [
+          {"name": "Russell Wilson", "id": "00-0029263"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Jared Goff", "id": "00-0033106"},
+          {"name": "Kirk Cousins", "id": "00-0029604"},
+          {"name": "Derek Carr", "id": "00-0031280"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Kenny Pickett", "id": "00-0038102"},
+          {"name": "Justin Herbert", "id": "00-0036355"}
+        ]
+      }
+    },
+    "2024": {
+      "label": "2024-25",
+      "stakes": "Jersey",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Trevor Lawrence", "id": "00-0036971", "to_week": 9},
+          {"name": "Kyler Murray", "id": "00-0035228", "from_week": 10},
+          {"name": "Aaron Rodgers", "id": "00-0023459"},
+          {"name": "C.J. Stroud", "id": "00-0039163"},
+          {"name": "Caleb Williams", "id": "00-0039918"},
+          {"name": "Brock Purdy", "id": "00-0037834"}
+        ],
+        "Matt": [
+          {"name": "Matthew Stafford", "id": "00-0026498"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Jared Goff", "id": "00-0033106"},
+          {"name": "Kirk Cousins", "id": "00-0029604"},
+          {"name": "Tua Tagovailoa", "id": "00-0036212"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Jordan Love", "id": "00-0036264"},
+          {"name": "Justin Herbert", "id": "00-0036355"}
+        ]
+      }
+    },
+    "2025": {
+      "label": "2025-26",
+      "stakes": "Jersey",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Kyler Murray", "id": "00-0035228"},
+          {"name": "Justin Herbert", "id": "00-0036355"},
+          {"name": "C.J. Stroud", "id": "00-0039163"},
+          {"name": "Jordan Love", "id": "00-0036264"},
+          {"name": "Brock Purdy", "id": "00-0037834", "to_week": 9},
+          {"name": "Sam Darnold", "id": "00-0034869", "from_week": 10}
+        ],
+        "Matt": [
+          {"name": "Matthew Stafford", "id": "00-0026498"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Jared Goff", "id": "00-0033106"},
+          {"name": "Jayden Daniels", "id": "00-0039910"},
+          {"name": "Drake Maye", "id": "00-0039851"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Baker Mayfield", "id": "00-0034855"},
+          {"name": "Bo Nix", "id": "00-0039732"}
+        ]
+      }
+    },
+    "2026": {
+      "label": "2026-27",
+      "stakes": "Jersey",
+      "rosters": {
+        "TT13": [
+          {"name": "Patrick Mahomes", "id": "00-0033873"},
+          {"name": "Lamar Jackson", "id": "00-0034796"},
+          {"name": "Joe Burrow", "id": "00-0036442"},
+          {"name": "Caleb Williams", "id": "00-0039918"},
+          {"name": "Justin Herbert", "id": "00-0036355"},
+          {"name": "C.J. Stroud", "id": "00-0039163"},
+          {"name": "Jordan Love", "id": "00-0036264"},
+          {"name": "Sam Darnold", "id": "00-0034869"}
+        ],
+        "Matt": [
+          {"name": "Matthew Stafford", "id": "00-0026498"},
+          {"name": "Josh Allen", "id": "00-0034857"},
+          {"name": "Jared Goff", "id": "00-0033106"},
+          {"name": "Brock Purdy", "id": "00-0037834"},
+          {"name": "Drake Maye", "id": "00-0039851"},
+          {"name": "Jalen Hurts", "id": "00-0036389"},
+          {"name": "Baker Mayfield", "id": "00-0034855"},
+          {"name": "Bo Nix", "id": "00-0039732"}
+        ]
+      },
+      "bench": {
+        "TT13": ["Deshaun Watson", "Geno Smith", "Jacoby Brissett", "Bryce Young", "Cam Ward"],
+        "Matt": ["Kirk Cousins", "Tua Tagovailoa", "Malik Willis", "Aaron Rodgers", "Daniel Jones"]
+      }
+    }
+  }
+}
