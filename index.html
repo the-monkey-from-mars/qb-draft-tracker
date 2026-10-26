@@ -407,6 +407,7 @@ function qbRow(q) {
   if (q.sb_wins) post.push(`Super Bowl ${5 * q.sb_wins}`);
 
   const math = `<p class="math"><b>${q.wins}</b> regular-season win${q.wins === 1 ? "" : "s"}` +
+    (q.ties ? ` and <b>${q.ties}</b> tie${q.ties === 1 ? "" : "s"} at ½ point` : "") +
     (q.halved ? `, halved and rounded down to <b>${q.reg_points}</b>` : "") +
     (post.length ? `, plus ${post.join(", ")}` : "") + ` = <b>${q.points}</b>.` +
     (q.goff_rule ? ` Goff rule took ${q.goff_rule} game${q.goff_rule > 1 ? "s" : ""} away.` : "") +

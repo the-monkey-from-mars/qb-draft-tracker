@@ -5,9 +5,10 @@ Reads drafts.json, pulls nflverse schedules + play-by-play, and writes
 standings.json for index.html.
 
 Scoring (from the league's Rules tab):
-  * 1 pt per regular-season win the QB is credited with.
-  * Regular-season points are halved (rounded down) if the QB's record is
-    below .500. A tie counts as half a win for this check.
+  * 1 pt per regular-season win the QB is credited with; a tie is half a
+    win (0.5 pt).
+  * Regular-season points are halved (rounded down to a whole number) if
+    the QB's record is below .500, with ties counting as half a win.
   * 3 pts per playoff win (Super Bowl excluded); a first-round bye counts as
     a playoff win.
   * 5 pts for a Super Bowl win.
@@ -192,7 +193,11 @@ def score_qb(entry, games, credit, byes, team_of):
     gp = stats["wins"] + stats["losses"] + stats["ties"]
     win_pct = (stats["wins"] + 0.5 * stats["ties"]) / gp if gp else 0.0
     halved = gp > 0 and win_pct < 0.5
-    reg_points = math.floor(stats["wins"] / 2) if halved else stats["wins"]
+    # A tie is worth half a win (half a point). Halving rounds down to a
+    # whole number, as the original rule does.
+    reg_raw = stats["wins"] + 0.5 * stats["ties"]
+    reg_points = math.floor(reg_raw / 2) if halved else reg_raw
+    reg_points = int(reg_points) if float(reg_points).is_integer() else reg_points
     post_points = 3 * (stats["playoff_wins"] + stats["byes"]) + 5 * stats["sb_wins"]
 
     return {
@@ -243,8 +248,8 @@ def build_audit(managers_out):
                         f"each threw {g['att']} passes; the tie goes to the starter, {q['name']}."})
                 if g["res"] == "T":
                     audit.append({"kind": "tie", "manager": m, "text":
-                        f"{wk} vs {g['opp']} ({g['score']}): tie for {q['name']}, counted as half a win "
-                        f"for the .500 check."})
+                        f"{wk} vs {g['opp']} ({g['score']}): tie for {q['name']}, worth half a win "
+                        f"(½ point, and half a win for the .500 check)."})
     return audit
 
 

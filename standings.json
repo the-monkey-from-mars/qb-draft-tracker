@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-10-26T18:33+00:00",
+ "generated_at": "2026-10-26T18:41+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
   "Matt": 449,
-  "TT13": 437
+  "TT13": 437.5
  },
  "season_wins": {
   "Matt": 2,
@@ -12491,7 +12491,7 @@
      ]
     },
     "TT13": {
-     "points": 66,
+     "points": 66.5,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -13482,9 +13482,9 @@
        "goff_rule": 0,
        "win_pct": 0.633,
        "halved": false,
-       "reg_points": 9,
+       "reg_points": 9.5,
        "post_points": 0,
-       "points": 9,
+       "points": 9.5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -13873,7 +13873,7 @@
     {
      "kind": "tie",
      "manager": "TT13",
-     "text": "Week 4 vs DAL (40-40): tie for Jordan Love, counted as half a win for the .500 check."
+     "text": "Week 4 vs DAL (40-40): tie for Jordan Love, worth half a win (\u00bd point, and half a win for the .500 check)."
     }
    ]
   },

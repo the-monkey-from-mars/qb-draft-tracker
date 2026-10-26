@@ -22,13 +22,16 @@ The site is static: GitHub Pages serves `index.html` and `standings.json`, and t
 | Item | Points |
 | --- | --- |
 | Regular-season win | 1 (halved, rounded down, if record is under .500) |
+| Regular-season tie | 0.5 |
 | Playoff win (not SB) | 3 |
 | First-round bye | 3 (counts as a playoff win) |
 | Super Bowl win | 5 |
 
 **Goff rule:** each game goes to the QB on that team with the most official pass attempts (sacks and 2-pt tries excluded). A tie goes to the starter (first QB to drop back).
 
-**Ties:** an NFL tie counts as half a win when checking the .500 line, and earns no points.
+**Ties:** an NFL tie is half a win: it earns 0.5 points and counts as half a win when checking the .500 line. If the QB is under .500, his regular-season points (ties included) are halved and rounded down to a whole number.
+
+**Goff rule scope:** applies to every game (injury, rest or benching alike), not only injuries.
 
 **Audit:** each season's page lists every bench swap, every Goff-rule game (with both QBs' attempts), every attempts tie settled by the starter rule, every NFL tie and every ruling.
 
