@@ -228,6 +228,23 @@
 
   .status a { color: #cfe0f3; }
 
+  .rules {
+    grid-column: 1 / -1;
+    max-width: 68ch;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 22px 10px;
+  }
+  .rules h2 { margin: 0 0 10px; font: 700 1.6rem var(--cond); }
+  .rules h3 { margin: 22px 0 4px; font: 700 1.25rem var(--cond); color: var(--navy); }
+  .rules p { margin: 0 0 10px; }
+  .rules .eg { color: var(--muted); font-size: 0.92rem; }
+  .rules table { width: 100%; border-collapse: collapse; }
+  .rules th, .rules td { text-align: left; padding: 8px 0; border-top: 1px solid var(--line); font-weight: 500; }
+  .rules td { text-align: right; font: 700 1.05rem var(--cond); }
+
   .note { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.85rem; }
   .note a { color: inherit; }
 
@@ -292,7 +309,7 @@ load()
     buildChrome();
     const years = Object.keys(d.seasons).sort();
     const fromHash = location.hash.slice(1);
-    select(d.seasons[fromHash] || fromHash === "all" ? fromHash : years[years.length - 1]);
+    select(d.seasons[fromHash] || ["all","rules"].includes(fromHash) ? fromHash : years[years.length - 1]);
   })
   .catch((e) => {
     $("matchup").textContent = "Couldn't load standings.json. Refresh to try again.";
@@ -325,19 +342,20 @@ function buildChrome() {
   const tabs = Object.keys(data.seasons).sort().reverse().map((y) =>
     `<button role="tab" data-key="${y}">${data.seasons[y].label}</button>`);
   tabs.push(`<button role="tab" data-key="all">All-time</button>`);
+  tabs.push(`<button role="tab" data-key="rules">Rules</button>`);
   $("tabs").innerHTML = tabs.join("");
   $("tabs").onclick = (e) => { const k = e.target.dataset.key; if (k) select(k); };
 }
 
 window.addEventListener("hashchange", () => {
   const k = location.hash.slice(1);
-  if (data && (data.seasons[k] || k === "all")) select(k);
+  if (data && (data.seasons[k] || k === "all" || k === "rules")) select(k);
 });
 
 function select(key) {
   history.replaceState(null, "", "#" + key);
   for (const b of $("tabs").children) b.setAttribute("aria-selected", b.dataset.key === key);
-  key === "all" ? renderAllTime() : renderSeason(key);
+  key === "all" ? renderAllTime() : key === "rules" ? renderRules() : renderSeason(key);
 }
 
 function leaderOf(pts) {
@@ -470,6 +488,37 @@ function wireRows() {
       btn.setAttribute("aria-expanded", open);
     };
   }
+}
+
+function renderRules() {
+  const lt = data.lifetime_points;
+  renderBoard(lt, "All-time", "Lifetime points across every draft.", "All-time leader");
+  $("main").innerHTML = `<section class="rules">
+    <h2>Scoring</h2>
+    <table>
+      <tr><th>Regular-season win</th><td>1 point</td></tr>
+      <tr><th>Regular-season tie</th><td>½ point (half a win)</td></tr>
+      <tr><th>Playoff win (not the Super Bowl)</th><td>3 points</td></tr>
+      <tr><th>First-round bye</th><td>3 points (counts as a playoff win)</td></tr>
+      <tr><th>Super Bowl win</th><td>5 points</td></tr>
+    </table>
+
+    <h3>Under .500</h3>
+    <p>If a QB finishes the regular season below .500, his regular-season points are halved and rounded down to the nearest whole number. Ties count as half a win, both for the .500 check and for the points being halved. Playoff, bye and Super Bowl points are never halved.</p>
+    <p class="eg">Example: 3 wins, 1 tie, 5 losses is a .389 record. Regular-season points are 3.5, halved to 1.75, rounded down to 1.</p>
+
+    <h3>Goff rule</h3>
+    <p>Every game's result goes to the quarterback on that team who threw the most pass attempts, whatever the reason: injury, rest or benching. If two QBs threw the same number, the starter gets the result. Sacks and two-point tries don't count as attempts.</p>
+    <p class="eg">Example: Burrow left 2025 Week 2 hurt after 13 passes and Browning threw 32 in the win, so the win went to Browning, not Burrow.</p>
+
+    <h3>Bench (since 2024–25)</h3>
+    <p>After the main draft, each manager picks five undrafted starting QBs to form the other manager's bench. Starting in Week 9, each manager may swap one starter for one bench QB, once, locked in before Week 10. The outgoing QB scores Weeks 1–9; the incoming QB scores Week 10 onward, playoffs included. Each is scored separately, so the under-.500 rule applies to each half on its own. A new bench is drafted every year, and a QB swapped into the lineup stays on that roster the following year.</p>
+
+    <h3>Winning the season</h3>
+    <p>Most points wins the season. The loser buys the winner an NFL jersey of the winner's choice. The manager whose QB wins the Super Bowl picks first in the next draft; otherwise the higher scorer picks first.</p>
+
+    <p class="eg">Every swap, Goff-rule game, tied-attempts game and NFL tie is listed under "Scoring notes" on each season's page.</p>
+  </section>`;
 }
 
 function renderAllTime() {
