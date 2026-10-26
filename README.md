@@ -7,7 +7,15 @@ Live standings for the TT13 vs Matt QB draft: https://the-monkey-from-mars.githu
 - `drafts.json` holds every season's rosters (and the current season's benches).
 - `updater.py` pulls schedules and play-by-play from [nflverse](https://github.com/nflverse) via `nflreadpy`, scores every QB, and writes `standings.json`.
 - `index.html` reads `standings.json`. No build step.
-- `.github/workflows/update.yml` runs the updater Mon, Tue and Fri mornings and commits only when standings change. Run it any time from **Actions → Update QB Standings → Run workflow**.
+- `.github/workflows/update.yml` runs the updater every morning from September through February and commits only when standings change.
+
+### How updating works
+
+The site is static: GitHub Pages serves `index.html` and `standings.json`, and the page just reads the JSON. Scores change only when the workflow regenerates `standings.json` and commits it; Pages then redeploys within a minute or two.
+
+- **Automatic:** daily at 11:23 UTC in-season. nflverse refreshes play-by-play overnight, so Sunday's games appear Monday morning.
+- **On demand:** the "Run an update now" link on the page opens the workflow; click **Run workflow** (needs repo write access, so it only works for the owner). Takes about 3 minutes.
+- **Open tabs** re-check `standings.json` when you switch back to them.
 
 ## Scoring (mirrors the Rules tab of the original sheet)
 
@@ -22,6 +30,8 @@ Live standings for the TT13 vs Matt QB draft: https://the-monkey-from-mars.githu
 
 **Ties:** an NFL tie counts as half a win when checking the .500 line, and earns no points.
 
+**Audit:** each season's page lists every bench swap, every Goff-rule game (with both QBs' attempts), every attempts tie settled by the starter rule, every NFL tie and every ruling.
+
 **Byes:** detected automatically (teams that skip the wild-card round) and credited to whoever is credited with that team's divisional-round game.
 
 ## Common edits
@@ -33,6 +43,15 @@ Live standings for the TT13 vs Matt QB draft: https://the-monkey-from-mars.githu
 ```json
 {"name": "Trevor Lawrence", "id": "00-0036971", "to_week": 9},
 {"name": "Kyler Murray", "id": "00-0035228", "from_week": 10}
+```
+
+**Commissioner ruling (override who gets a game):** add a `rulings` list to the season. The QB doesn't need to have thrown a pass. Every ruling is shown under Scoring notes on the page.
+
+```json
+"rulings": [
+  {"week": 18, "team": "HOU", "credit_id": "00-0039163", "credit_name": "C.J. Stroud",
+   "note": "Rested for the playoffs, not injured, so the starter keeps the win."}
+]
 ```
 
 **Finding a player id:**

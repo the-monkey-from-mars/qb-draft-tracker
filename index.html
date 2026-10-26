@@ -202,6 +202,32 @@
 
   .all-row > button { grid-template-columns: 1fr auto; }
 
+  .g.mark { box-shadow: inset 0 -3px 0 #c58a00; }
+
+  .audit {
+    grid-column: 1 / -1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 18px 6px;
+  }
+  .audit h3 { margin: 0 0 2px; font: 700 1.25rem var(--cond); }
+  .audit > p { margin: 0 0 10px; color: var(--muted); font-size: 0.9rem; }
+  .audit ul { list-style: none; margin: 0; padding: 0; }
+  .audit li {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 10px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .audit .kind { font: 700 0.95rem var(--cond); color: var(--navy); }
+  .audit .who { display: block; font: 500 0.85rem var(--body); color: var(--muted); }
+  @media (max-width: 520px) { .audit li { grid-template-columns: 1fr; gap: 2px; } }
+
+  .status a { color: #cfe0f3; }
+
   .note { grid-column: 1 / -1; text-align: center; color: var(--muted); font-size: 0.85rem; }
   .note a { color: inherit; }
 
@@ -252,9 +278,15 @@
 <script>
 let data;
 const $ = (id) => document.getElementById(id);
+const UPDATE_URL =
+  "https://github.com/the-monkey-from-mars/qb-draft-tracker/actions/workflows/update.yml";
 
-fetch("standings.json", { cache: "no-cache" })
-  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+function load() {
+  return fetch("standings.json", { cache: "no-cache" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+}
+
+load()
   .then((d) => {
     data = d;
     buildChrome();
@@ -266,6 +298,17 @@ fetch("standings.json", { cache: "no-cache" })
     $("matchup").textContent = "Couldn't load standings.json. Refresh to try again.";
     console.error(e);
   });
+
+// When someone returns to an open tab, pick up any newer standings.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible" || !data) return;
+  load().then((d) => {
+    if (d.generated_at === data.generated_at) return;
+    data = d;
+    buildChrome();
+    select(location.hash.slice(1) || Object.keys(d.seasons).sort().pop());
+  }).catch(() => {});
+});
 
 function buildChrome() {
   const [a, b] = data.managers;
@@ -320,9 +363,13 @@ function renderSeason(year) {
   const live = s.status !== "final";
   const updated = new Date(data.generated_at).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   renderBoard(pts, s.label,
-    live ? `${s.label} season, through Week ${s.through_week}. Updated ${updated}.`
+    live ? `${s.label} season, through Week ${s.through_week}. Last updated ${updated}; refreshes automatically each morning.`
          : `${s.label} season, final.${s.stakes ? " Stakes: " + s.stakes + "." : ""}`,
     live ? "Leading" : "Season winner");
+  if (live) {
+    $("status").insertAdjacentHTML("beforeend",
+      ` <a href="${UPDATE_URL}" target="_blank" rel="noopener">Run an update now</a> (repo owner).`);
+  }
 
   const lead = leaderOf(pts);
   let html = data.managers.map((m) => {
@@ -338,6 +385,7 @@ function renderSeason(year) {
       ${data.managers.map((m) => `<p><b>${m}</b> can swap in: ${(s.bench[m] || []).join(", ")}</p>`).join("")}
       <p>One swap per side, locked in before Week 10. The outgoing QB keeps Weeks 1–9; the new QB scores from Week 10 on.</p></div>`;
   }
+  html += auditPanel(s);
   html += `<p class="note">Tap a quarterback to see each game. Source: <a href="https://github.com/nflverse">nflverse</a> play-by-play.</p>`;
   $("main").innerHTML = html;
   wireRows();
@@ -370,9 +418,13 @@ function qbRow(q) {
     const wk = g.type === "REG" ? g.wk : g.type === "SB" ? "SB" : g.type;
     const tip = `Week ${g.wk} vs ${g.opp}` + (g.score ? `, ${g.score}` : "") +
       (g.att != null ? `, ${g.att} att` : "") +
-      ({ goff: ", backup threw more", DNP: ", did not play", pending: ", awaiting data" }[g.res] || "") +
+      (g.res === "goff" ? `, credited to ${g.credited} (${g.credited_att} att)` : "") +
+      ({ DNP: ", did not play", pending: ", awaiting data" }[g.res] || "") +
+      (g.tiebreak ? `, tied attempts with ${g.tiebreak}; starter wins tie` : "") +
+      (g.ruling ? `, ruling: ${g.ruling}` : "") +
       (g.bye ? " (bye credited)" : "");
-    return `<div class="g ${cls} ${g.type !== "REG" ? "post" : ""}" title="${tip}">${wk}<span>${label}</span></div>`;
+    const mark = g.ruling || g.tiebreak ? "mark" : "";
+    return `<div class="g ${cls} ${mark} ${g.type !== "REG" ? "post" : ""}" title="${tip}">${wk}<span>${label}</span></div>`;
   }).join("");
 
   return `<div class="qb ${q.subbed_out_after ? "out" : ""}">
@@ -383,8 +435,31 @@ function qbRow(q) {
       <div class="pts">${q.points}</div>
     </button>
     <div class="detail">${math}<div class="strip">${games}</div>
-      <div class="legend">G = Goff rule (backup threw more), – = did not play. Outlined = playoffs.</div></div>
+      <div class="legend">G = Goff rule (another QB threw more), – = did not play, gold underline = attempts tie or commissioner ruling, outlined = playoffs. Details under Scoring notes.</div></div>
   </div>`;
+}
+
+const AUDIT_LABELS = {
+  swap: "Bench swap",
+  goff: "Goff rule",
+  tiebreak: "Attempts tied",
+  tie: "NFL tie",
+  ruling: "Ruling",
+};
+
+function auditPanel(s) {
+  const items = s.audit || [];
+  const order = Object.keys(AUDIT_LABELS);
+  const sorted = [...items].sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  const list = sorted.map((a) => `<li>
+      <span class="kind">${AUDIT_LABELS[a.kind] || a.kind}<span class="who">${a.manager}</span></span>
+      <span>${a.text}</span></li>`).join("");
+  return `<section class="audit">
+    <h3>Scoring notes</h3>
+    <p>${items.length
+      ? "Every result that didn't simply go to the starting QB, plus bench swaps and ties."
+      : "Nothing unusual yet: every result went to the starting QB."}</p>
+    <ul>${list}</ul></section>`;
 }
 
 function wireRows() {
