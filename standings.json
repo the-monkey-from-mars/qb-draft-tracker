@@ -3553,7 +3553,7 @@
    "winner": "Matt"
   }
  ],
- "generated_at": "2026-10-26T18:53+00:00",
+ "generated_at": "2026-10-27T16:44+00:00",
  "managers": [
   "Matt",
   "TT13"
@@ -27736,7 +27736,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 1,
+       "missed_games": 2,
        "goff_rule": 0,
        "win_pct": 0.4,
        "halved": true,
@@ -27830,6 +27830,17 @@
          "home": true,
          "team": "PHI",
          "score": "14-25",
+         "res": "DNP"
+        },
+        {
+         "wk": 7,
+         "type": "REG",
+         "opp": "DAL",
+         "gid": "2026_07_DAL_PHI",
+         "date": "2026-10-26",
+         "home": true,
+         "team": "PHI",
+         "score": "21-38",
          "res": "DNP"
         }
        ]
