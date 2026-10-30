@@ -3553,14 +3553,14 @@
    "winner": "Matt"
   }
  ],
- "generated_at": "2026-10-27T16:44+00:00",
+ "generated_at": "2026-10-30T17:03+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
   "Matt": 449,
-  "TT13": 437.5
+  "TT13": 438.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27075,7 +27075,7 @@
    "label": "2026-27",
    "stakes": "Jersey",
    "status": "in_progress",
-   "through_week": 7,
+   "through_week": 8,
    "pending_games": 0,
    "bench": {
     "TT13": [
@@ -28098,7 +28098,7 @@
      ]
     },
     "TT13": {
-     "points": 21,
+     "points": 22,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28825,7 +28825,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
@@ -28833,11 +28833,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.571,
+       "win_pct": 0.625,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28945,6 +28945,21 @@
          "opp_qb": "Jared Goff",
          "opp_att": 32,
          "res": "L"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "CAR",
+         "gid": "2026_08_CAR_GB",
+         "date": "2026-10-29",
+         "home": true,
+         "team": "GB",
+         "score": "27-19",
+         "att": 41,
+         "opp_qb_id": "00-0039150",
+         "opp_qb": "Bryce Young",
+         "opp_att": 41,
+         "res": "W"
         }
        ]
       },
