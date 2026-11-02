@@ -3551,16 +3551,64 @@
    },
    "home": "Matt",
    "winner": "Matt"
+  },
+  {
+   "season": "2026",
+   "wk": 8,
+   "type": "REG",
+   "date": "2026-11-01",
+   "qbs": {
+    "Matt": "Matthew Stafford",
+    "TT13": "Justin Herbert"
+   },
+   "ids": {
+    "Matt": "00-0026498",
+    "TT13": "00-0036355"
+   },
+   "teams": {
+    "Matt": "LA",
+    "TT13": "LAC"
+   },
+   "score": {
+    "Matt": 24,
+    "TT13": 9
+   },
+   "home": "Matt",
+   "winner": "Matt"
+  },
+  {
+   "season": "2026",
+   "wk": 8,
+   "type": "REG",
+   "date": "2026-11-01",
+   "qbs": {
+    "Matt": "Bo Nix",
+    "TT13": "Patrick Mahomes"
+   },
+   "ids": {
+    "Matt": "00-0039732",
+    "TT13": "00-0033873"
+   },
+   "teams": {
+    "Matt": "DEN",
+    "TT13": "KC"
+   },
+   "score": {
+    "Matt": 28,
+    "TT13": 24
+   },
+   "home": "Matt",
+   "winner": "Matt"
   }
  ],
- "generated_at": "2026-10-30T17:03+00:00",
+ "generated_at": "2026-11-02T20:49+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
-  "Matt": 449,
-  "TT13": 438.5
+  "Matt": 457,
+  "TT13": 439.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27095,7 +27143,7 @@
    },
    "managers": {
     "Matt": {
-     "points": 26,
+     "points": 34,
      "roster": [
       {
        "name": "Matthew Stafford",
@@ -27105,7 +27153,7 @@
         1,
         null
        ],
-       "wins": 3,
+       "wins": 4,
        "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
@@ -27113,11 +27161,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.429,
-       "halved": true,
-       "reg_points": 1,
+       "win_pct": 0.5,
+       "halved": false,
+       "reg_points": 4,
        "post_points": 0,
-       "points": 1,
+       "points": 4,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27225,6 +27273,21 @@
          "opp_qb": "Kirk Cousins",
          "opp_att": 44,
          "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "LAC",
+         "gid": "2026_08_LAC_LA",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "LA",
+         "score": "24-9",
+         "att": 25,
+         "opp_qb_id": "00-0036355",
+         "opp_qb": "Justin Herbert",
+         "opp_att": 32,
+         "res": "W"
         }
        ]
       },
@@ -27236,7 +27299,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27244,11 +27307,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.833,
+       "win_pct": 0.857,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27341,6 +27404,21 @@
          "opp_qb": "Kirk Cousins",
          "opp_att": 41,
          "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "BAL",
+         "gid": "2026_08_BAL_BUF",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "BUF",
+         "score": "36-10",
+         "att": 34,
+         "opp_qb_id": "00-0040981",
+         "opp_qb": "Joe Fagnano",
+         "opp_att": 21,
+         "res": "W"
         }
        ]
       },
@@ -27352,7 +27430,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -27360,11 +27438,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.667,
+       "win_pct": 0.714,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27456,6 +27534,21 @@
          "opp_qb_id": "00-0036264",
          "opp_qb": "Jordan Love",
          "opp_att": 45,
+         "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "MIN",
+         "gid": "2026_08_MIN_DET",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "DET",
+         "score": "19-15",
+         "att": 25,
+         "opp_qb_id": "00-0035228",
+         "opp_qb": "Kyler Murray",
+         "opp_att": 29,
          "res": "W"
         }
        ]
@@ -27599,7 +27692,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
@@ -27607,11 +27700,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.571,
+       "win_pct": 0.625,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27719,6 +27812,21 @@
          "opp_qb": "Caleb Williams",
          "opp_att": 33,
          "res": "L"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "MIA",
+         "gid": "2026_08_NE_MIA",
+         "date": "2026-11-01",
+         "home": false,
+         "team": "NE",
+         "score": "24-19",
+         "att": 20,
+         "opp_qb_id": "00-0038128",
+         "opp_qb": "Malik Willis",
+         "opp_att": 32,
+         "res": "W"
         }
        ]
       },
@@ -27736,7 +27844,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 2,
+       "missed_games": 3,
        "goff_rule": 0,
        "win_pct": 0.4,
        "halved": true,
@@ -27842,6 +27950,17 @@
          "team": "PHI",
          "score": "21-38",
          "res": "DNP"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "WAS",
+         "gid": "2026_08_PHI_WAS",
+         "date": "2026-11-01",
+         "home": false,
+         "team": "PHI",
+         "score": "10-27",
+         "res": "DNP"
         }
        ]
       },
@@ -27853,7 +27972,7 @@
         1,
         null
        ],
-       "wins": 1,
+       "wins": 2,
        "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
@@ -27861,11 +27980,11 @@
        "byes": 0,
        "missed_games": 3,
        "goff_rule": 0,
-       "win_pct": 0.25,
+       "win_pct": 0.4,
        "halved": true,
-       "reg_points": 0,
+       "reg_points": 1,
        "post_points": 0,
-       "points": 0,
+       "points": 1,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27961,6 +28080,21 @@
          "opp_qb": "Bryce Young",
          "opp_att": 27,
          "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "ATL",
+         "gid": "2026_08_ATL_TB",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "TB",
+         "score": "16-0",
+         "att": 3,
+         "opp_qb_id": "00-0039917",
+         "opp_qb": "Michael Penix Jr.",
+         "opp_att": 24,
+         "res": "W"
         }
        ]
       },
@@ -27972,7 +28106,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -27980,11 +28114,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.714,
+       "win_pct": 0.75,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28092,13 +28226,28 @@
          "opp_qb": "Jacoby Brissett",
          "opp_att": 48,
          "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "KC",
+         "gid": "2026_08_KC_DEN",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "DEN",
+         "score": "28-24",
+         "att": 32,
+         "opp_qb_id": "00-0033873",
+         "opp_qb": "Patrick Mahomes",
+         "opp_att": 41,
+         "res": "W"
         }
        ]
       }
      ]
     },
     "TT13": {
-     "points": 22,
+     "points": 23,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28109,14 +28258,14 @@
         null
        ],
        "wins": 5,
-       "losses": 1,
+       "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.833,
+       "win_pct": 0.714,
        "halved": false,
        "reg_points": 5,
        "post_points": 0,
@@ -28213,6 +28362,21 @@
          "opp_qb": "Sam Darnold",
          "opp_att": 28,
          "res": "L"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "DEN",
+         "gid": "2026_08_KC_DEN",
+         "date": "2026-11-01",
+         "home": false,
+         "team": "KC",
+         "score": "24-28",
+         "att": 41,
+         "opp_qb_id": "00-0039732",
+         "opp_qb": "Bo Nix",
+         "opp_att": 32,
+         "res": "L"
         }
        ]
       },
@@ -28231,7 +28395,7 @@
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 3,
-       "goff_rule": 0,
+       "goff_rule": 1,
        "win_pct": 0.75,
        "halved": false,
        "reg_points": 3,
@@ -28332,6 +28496,24 @@
          "team": "BAL",
          "score": "13-35",
          "res": "DNP"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "BUF",
+         "gid": "2026_08_BAL_BUF",
+         "date": "2026-11-01",
+         "home": false,
+         "team": "BAL",
+         "score": "10-36",
+         "att": 1,
+         "opp_qb_id": "00-0034857",
+         "opp_qb": "Josh Allen",
+         "opp_att": 34,
+         "res": "goff",
+         "outcome": "L",
+         "credited": "Joe Fagnano",
+         "credited_att": 21
         }
        ]
       },
@@ -28343,7 +28525,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28351,11 +28533,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.667,
+       "win_pct": 0.714,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28447,6 +28629,21 @@
          "opp_qb_id": "00-0035993",
          "opp_qb": "Tyler Huntley",
          "opp_att": 34,
+         "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "TEN",
+         "gid": "2026_08_TEN_CIN",
+         "date": "2026-11-01",
+         "home": true,
+         "team": "CIN",
+         "score": "43-36",
+         "att": 48,
+         "opp_qb_id": "00-0040676",
+         "opp_qb": "Cam Ward",
+         "opp_att": 40,
          "res": "W"
         }
        ]
@@ -28579,7 +28776,7 @@
         null
        ],
        "wins": 0,
-       "losses": 6,
+       "losses": 7,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
@@ -28682,6 +28879,21 @@
          "opp_qb_id": "00-0033873",
          "opp_qb": "Patrick Mahomes",
          "opp_att": 30,
+         "res": "L"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "LA",
+         "gid": "2026_08_LAC_LA",
+         "date": "2026-11-01",
+         "home": false,
+         "team": "LAC",
+         "score": "9-24",
+         "att": 32,
+         "opp_qb_id": "00-0026498",
+         "opp_qb": "Matthew Stafford",
+         "opp_att": 25,
          "res": "L"
         }
        ]
@@ -29097,6 +29309,11 @@
     }
    },
    "audit": [
+    {
+     "kind": "goff",
+     "manager": "TT13",
+     "text": "Week 8 vs BUF (10-36, L): Joe Fagnano threw 21 passes to Lamar Jackson's 1, so the result goes to Joe Fagnano."
+    },
     {
      "kind": "goff",
      "manager": "TT13",
