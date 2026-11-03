@@ -3601,14 +3601,14 @@
    "winner": "Matt"
   }
  ],
- "generated_at": "2026-11-02T20:49+00:00",
+ "generated_at": "2026-11-03T18:29+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
   "Matt": 457,
-  "TT13": 439.5
+  "TT13": 440.5
  },
  "season_wins": {
   "Matt": 2,
@@ -28247,7 +28247,7 @@
      ]
     },
     "TT13": {
-     "points": 23,
+     "points": 24,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28656,7 +28656,7 @@
         1,
         null
        ],
-       "wins": 3,
+       "wins": 4,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -28664,11 +28664,11 @@
        "byes": 0,
        "missed_games": 3,
        "goff_rule": 0,
-       "win_pct": 0.75,
+       "win_pct": 0.8,
        "halved": false,
-       "reg_points": 3,
+       "reg_points": 4,
        "post_points": 0,
-       "points": 3,
+       "points": 4,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28763,6 +28763,21 @@
          "opp_qb_id": "00-0039851",
          "opp_qb": "Drake Maye",
          "opp_att": 31,
+         "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "SEA",
+         "gid": "2026_08_CHI_SEA",
+         "date": "2026-11-02",
+         "home": false,
+         "team": "CHI",
+         "score": "34-17",
+         "att": 34,
+         "opp_qb_id": "00-0034869",
+         "opp_qb": "Sam Darnold",
+         "opp_att": 34,
          "res": "W"
         }
        ]
@@ -29184,14 +29199,14 @@
         null
        ],
        "wins": 2,
-       "losses": 3,
+       "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 1,
        "goff_rule": 1,
-       "win_pct": 0.4,
+       "win_pct": 0.333,
        "halved": true,
        "reg_points": 1,
        "post_points": 0,
@@ -29302,6 +29317,21 @@
          "opp_qb": "Patrick Mahomes",
          "opp_att": 33,
          "res": "W"
+        },
+        {
+         "wk": 8,
+         "type": "REG",
+         "opp": "CHI",
+         "gid": "2026_08_CHI_SEA",
+         "date": "2026-11-02",
+         "home": true,
+         "team": "SEA",
+         "score": "17-34",
+         "att": 34,
+         "opp_qb_id": "00-0039918",
+         "opp_qb": "Caleb Williams",
+         "opp_att": 34,
+         "res": "L"
         }
        ]
       }
