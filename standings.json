@@ -3599,16 +3599,64 @@
    },
    "home": "Matt",
    "winner": "Matt"
+  },
+  {
+   "season": "2026",
+   "wk": 9,
+   "type": "REG",
+   "date": "2026-11-08",
+   "qbs": {
+    "Matt": "Drake Maye",
+    "TT13": "Jordan Love"
+   },
+   "ids": {
+    "Matt": "00-0039851",
+    "TT13": "00-0036264"
+   },
+   "teams": {
+    "Matt": "NE",
+    "TT13": "GB"
+   },
+   "score": {
+    "Matt": 27,
+    "TT13": 45
+   },
+   "home": "Matt",
+   "winner": "TT13"
+  },
+  {
+   "season": "2026",
+   "wk": 9,
+   "type": "REG",
+   "date": "2026-11-08",
+   "qbs": {
+    "Matt": "Baker Mayfield",
+    "TT13": "Caleb Williams"
+   },
+   "ids": {
+    "Matt": "00-0034855",
+    "TT13": "00-0039918"
+   },
+   "teams": {
+    "Matt": "TB",
+    "TT13": "CHI"
+   },
+   "score": {
+    "Matt": 24,
+    "TT13": 27
+   },
+   "home": "TT13",
+   "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-06T18:06+00:00",
+ "generated_at": "2026-11-09T21:28+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
-  "Matt": 457,
-  "TT13": 440.5
+  "Matt": 461,
+  "TT13": 444.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27143,7 +27191,7 @@
    },
    "managers": {
     "Matt": {
-     "points": 34,
+     "points": 38,
      "roster": [
       {
        "name": "Matthew Stafford",
@@ -27153,7 +27201,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
@@ -27161,11 +27209,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.5,
+       "win_pct": 0.556,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27287,6 +27335,21 @@
          "opp_qb_id": "00-0036355",
          "opp_qb": "Justin Herbert",
          "opp_att": 32,
+         "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "WAS",
+         "gid": "2026_09_LA_WAS",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "LA",
+         "score": "20-13",
+         "att": 43,
+         "opp_qb_id": "00-0039910",
+         "opp_qb": "Jayden Daniels",
+         "opp_att": 35,
          "res": "W"
         }
        ]
@@ -27430,7 +27493,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -27438,11 +27501,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.714,
+       "win_pct": 0.75,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27550,6 +27613,21 @@
          "opp_qb": "Kyler Murray",
          "opp_att": 29,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "MIA",
+         "gid": "2026_09_DET_MIA",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "DET",
+         "score": "19-9",
+         "att": 25,
+         "opp_qb_id": "00-0038128",
+         "opp_qb": "Malik Willis",
+         "opp_att": 25,
+         "res": "W"
         }
        ]
       },
@@ -27561,7 +27639,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27569,11 +27647,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.857,
+       "win_pct": 0.875,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27681,6 +27759,21 @@
          "opp_qb": "Michael Penix Jr.",
          "opp_att": 34,
          "res": "L"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "LV",
+         "gid": "2026_09_LV_SF",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "SF",
+         "score": "38-17",
+         "att": 25,
+         "opp_qb_id": "00-0029604",
+         "opp_qb": "Kirk Cousins",
+         "opp_att": 32,
+         "res": "W"
         }
        ]
       },
@@ -27693,14 +27786,14 @@
         null
        ],
        "wins": 5,
-       "losses": 3,
+       "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.625,
+       "win_pct": 0.556,
        "halved": false,
        "reg_points": 5,
        "post_points": 0,
@@ -27827,6 +27920,21 @@
          "opp_qb": "Malik Willis",
          "opp_att": 32,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "GB",
+         "gid": "2026_09_GB_NE",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "NE",
+         "score": "27-45",
+         "att": 38,
+         "opp_qb_id": "00-0036264",
+         "opp_qb": "Jordan Love",
+         "opp_att": 29,
+         "res": "L"
         }
        ]
       },
@@ -27844,7 +27952,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 3,
+       "missed_games": 4,
        "goff_rule": 0,
        "win_pct": 0.4,
        "halved": true,
@@ -27961,6 +28069,17 @@
          "team": "PHI",
          "score": "10-27",
          "res": "DNP"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "NYG",
+         "gid": "2026_09_NYG_PHI",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "PHI",
+         "score": "11-19",
+         "res": "DNP"
         }
        ]
       },
@@ -27973,14 +28092,14 @@
         null
        ],
        "wins": 2,
-       "losses": 3,
+       "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 3,
        "goff_rule": 0,
-       "win_pct": 0.4,
+       "win_pct": 0.333,
        "halved": true,
        "reg_points": 1,
        "post_points": 0,
@@ -28095,6 +28214,21 @@
          "opp_qb": "Michael Penix Jr.",
          "opp_att": 24,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "CHI",
+         "gid": "2026_09_TB_CHI",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "TB",
+         "score": "24-27",
+         "att": 32,
+         "opp_qb_id": "00-0039918",
+         "opp_qb": "Caleb Williams",
+         "opp_att": 37,
+         "res": "L"
         }
        ]
       },
@@ -28106,7 +28240,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28114,11 +28248,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.75,
+       "win_pct": 0.778,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28241,13 +28375,28 @@
          "opp_qb": "Patrick Mahomes",
          "opp_att": 41,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "CAR",
+         "gid": "2026_09_DEN_CAR",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "DEN",
+         "score": "26-21",
+         "att": 37,
+         "opp_qb_id": "00-0039150",
+         "opp_qb": "Bryce Young",
+         "opp_att": 39,
+         "res": "W"
         }
        ]
       }
      ]
     },
     "TT13": {
-     "points": 24,
+     "points": 28,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28257,7 +28406,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28265,11 +28414,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.714,
+       "win_pct": 0.75,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28377,6 +28526,21 @@
          "opp_qb": "Bo Nix",
          "opp_att": 32,
          "res": "L"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "NYJ",
+         "gid": "2026_09_NYJ_KC",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "KC",
+         "score": "35-12",
+         "att": 31,
+         "opp_qb_id": "00-0030565",
+         "opp_qb": "Geno Smith",
+         "opp_att": 32,
+         "res": "W"
         }
        ]
       },
@@ -28536,7 +28700,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28544,11 +28708,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.714,
+       "win_pct": 0.75,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28656,6 +28820,21 @@
          "opp_qb": "Cam Ward",
          "opp_att": 40,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "ATL",
+         "gid": "2026_09_CIN_ATL",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "CIN",
+         "score": "34-17",
+         "att": 29,
+         "opp_qb_id": "00-0039917",
+         "opp_qb": "Michael Penix Jr.",
+         "opp_att": 31,
+         "res": "W"
         }
        ]
       },
@@ -28667,7 +28846,7 @@
         1,
         null
        ],
-       "wins": 4,
+       "wins": 5,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -28675,11 +28854,11 @@
        "byes": 0,
        "missed_games": 3,
        "goff_rule": 0,
-       "win_pct": 0.8,
+       "win_pct": 0.833,
        "halved": false,
-       "reg_points": 4,
+       "reg_points": 5,
        "post_points": 0,
-       "points": 4,
+       "points": 5,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28790,6 +28969,21 @@
          "opp_qb": "Sam Darnold",
          "opp_att": 34,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "TB",
+         "gid": "2026_09_TB_CHI",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "CHI",
+         "score": "27-24",
+         "att": 37,
+         "opp_qb_id": "00-0034855",
+         "opp_qb": "Baker Mayfield",
+         "opp_att": 32,
+         "res": "W"
         }
        ]
       },
@@ -28802,7 +28996,7 @@
         null
        ],
        "wins": 0,
-       "losses": 7,
+       "losses": 8,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
@@ -28921,6 +29115,21 @@
          "opp_qb": "Matthew Stafford",
          "opp_att": 25,
          "res": "L"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "HOU",
+         "gid": "2026_09_HOU_LAC",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "LAC",
+         "score": "22-44",
+         "att": 23,
+         "opp_qb_id": "00-0039163",
+         "opp_qb": "C.J. Stroud",
+         "opp_att": 35,
+         "res": "L"
         }
        ]
       },
@@ -28932,7 +29141,7 @@
         1,
         null
        ],
-       "wins": 2,
+       "wins": 3,
        "losses": 5,
        "ties": 0,
        "playoff_wins": 0,
@@ -28940,7 +29149,7 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.286,
+       "win_pct": 0.375,
        "halved": true,
        "reg_points": 1,
        "post_points": 0,
@@ -29052,6 +29261,21 @@
          "opp_qb": "J.J. McCarthy",
          "opp_att": 28,
          "res": "L"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "LAC",
+         "gid": "2026_09_HOU_LAC",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "HOU",
+         "score": "44-22",
+         "att": 35,
+         "opp_qb_id": "00-0036355",
+         "opp_qb": "Justin Herbert",
+         "opp_att": 23,
+         "res": "W"
         }
        ]
       },
@@ -29063,7 +29287,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
@@ -29071,11 +29295,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.625,
+       "win_pct": 0.667,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -29198,6 +29422,21 @@
          "opp_qb": "Bryce Young",
          "opp_att": 41,
          "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "NE",
+         "gid": "2026_09_GB_NE",
+         "date": "2026-11-08",
+         "home": false,
+         "team": "GB",
+         "score": "45-27",
+         "att": 29,
+         "opp_qb_id": "00-0039851",
+         "opp_qb": "Drake Maye",
+         "opp_att": 38,
+         "res": "W"
         }
        ]
       },
@@ -29215,7 +29454,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 1,
+       "missed_games": 2,
        "goff_rule": 1,
        "win_pct": 0.333,
        "halved": true,
@@ -29343,6 +29582,17 @@
          "opp_qb": "Caleb Williams",
          "opp_att": 34,
          "res": "L"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "ARI",
+         "gid": "2026_09_ARI_SEA",
+         "date": "2026-11-08",
+         "home": true,
+         "team": "SEA",
+         "score": "17-3",
+         "res": "DNP"
         }
        ]
       }
