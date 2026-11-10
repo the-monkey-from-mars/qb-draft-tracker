@@ -3649,13 +3649,13 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-09T21:28+00:00",
+ "generated_at": "2026-11-10T18:42+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
-  "Matt": 461,
+  "Matt": 462,
   "TT13": 444.5
  },
  "season_wins": {
@@ -27191,7 +27191,7 @@
    },
    "managers": {
     "Matt": {
-     "points": 38,
+     "points": 39,
      "roster": [
       {
        "name": "Matthew Stafford",
@@ -27362,7 +27362,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27370,11 +27370,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.857,
+       "win_pct": 0.875,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27481,6 +27481,21 @@
          "opp_qb_id": "00-0040981",
          "opp_qb": "Joe Fagnano",
          "opp_att": 21,
+         "res": "W"
+        },
+        {
+         "wk": 9,
+         "type": "REG",
+         "opp": "MIN",
+         "gid": "2026_09_BUF_MIN",
+         "date": "2026-11-09",
+         "home": false,
+         "team": "BUF",
+         "score": "23-6",
+         "att": 31,
+         "opp_qb_id": "00-0032950",
+         "opp_qb": "Carson Wentz",
+         "opp_att": 25,
          "res": "W"
         }
        ]
