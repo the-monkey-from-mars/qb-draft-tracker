@@ -3649,7 +3649,7 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-10T18:42+00:00",
+ "generated_at": "2026-11-13T18:35+00:00",
  "managers": [
   "Matt",
   "TT13"
@@ -27171,7 +27171,7 @@
    "label": "2026-27",
    "stakes": "Jersey",
    "status": "in_progress",
-   "through_week": 9,
+   "through_week": 10,
    "pending_games": 0,
    "bench": {
     "TT13": [
