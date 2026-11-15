@@ -3649,7 +3649,7 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-13T18:35+00:00",
+ "generated_at": "2026-11-15T17:50+00:00",
  "managers": [
   "Matt",
   "TT13"
@@ -27172,7 +27172,7 @@
    "stakes": "Jersey",
    "status": "in_progress",
    "through_week": 10,
-   "pending_games": 0,
+   "pending_games": 1,
    "bench": {
     "TT13": [
      "Deshaun Watson",
@@ -27643,6 +27643,16 @@
          "opp_qb": "Malik Willis",
          "opp_att": 25,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "NE",
+         "gid": "2026_10_NE_DET",
+         "date": "2026-11-15",
+         "home": true,
+         "team": "DET",
+         "res": "pending"
         }
        ]
       },
@@ -27950,6 +27960,16 @@
          "opp_qb": "Jordan Love",
          "opp_att": 29,
          "res": "L"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "DET",
+         "gid": "2026_10_NE_DET",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "NE",
+         "res": "pending"
         }
        ]
       },
