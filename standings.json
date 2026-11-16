@@ -3649,14 +3649,14 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-15T17:50+00:00",
+ "generated_at": "2026-11-16T21:06+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
-  "Matt": 462,
-  "TT13": 444.5
+  "Matt": 466,
+  "TT13": 446.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27172,7 +27172,7 @@
    "stakes": "Jersey",
    "status": "in_progress",
    "through_week": 10,
-   "pending_games": 1,
+   "pending_games": 0,
    "bench": {
     "TT13": [
      "Deshaun Watson",
@@ -27191,7 +27191,7 @@
    },
    "managers": {
     "Matt": {
-     "points": 39,
+     "points": 43,
      "roster": [
       {
        "name": "Matthew Stafford",
@@ -27201,7 +27201,7 @@
         1,
         null
        ],
-       "wins": 5,
+       "wins": 6,
        "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
@@ -27209,11 +27209,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.556,
+       "win_pct": 0.6,
        "halved": false,
-       "reg_points": 5,
+       "reg_points": 6,
        "post_points": 0,
-       "points": 5,
+       "points": 6,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27351,6 +27351,21 @@
          "opp_qb": "Jayden Daniels",
          "opp_att": 35,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "ARI",
+         "gid": "2026_10_LA_ARI",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "LA",
+         "score": "34-6",
+         "att": 26,
+         "opp_qb_id": "00-0041561",
+         "opp_qb": "Carson Beck",
+         "opp_att": 18,
+         "res": "W"
         }
        ]
       },
@@ -27362,7 +27377,7 @@
         1,
         null
        ],
-       "wins": 7,
+       "wins": 8,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27370,11 +27385,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.875,
+       "win_pct": 0.889,
        "halved": false,
-       "reg_points": 7,
+       "reg_points": 8,
        "post_points": 0,
-       "points": 7,
+       "points": 8,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27497,6 +27512,21 @@
          "opp_qb": "Carson Wentz",
          "opp_att": 25,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "NYJ",
+         "gid": "2026_10_BUF_NYJ",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "BUF",
+         "score": "31-12",
+         "att": 21,
+         "opp_qb_id": "00-0030565",
+         "opp_qb": "Geno Smith",
+         "opp_att": 21,
+         "res": "W"
         }
        ]
       },
@@ -27508,7 +27538,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -27516,11 +27546,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.75,
+       "win_pct": 0.778,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27652,7 +27682,12 @@
          "date": "2026-11-15",
          "home": true,
          "team": "DET",
-         "res": "pending"
+         "score": "35-10",
+         "att": 31,
+         "opp_qb_id": "00-0038476",
+         "opp_qb": "Tommy DeVito",
+         "opp_att": 24,
+         "res": "W"
         }
        ]
       },
@@ -27664,7 +27699,7 @@
         1,
         null
        ],
-       "wins": 7,
+       "wins": 8,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27672,11 +27707,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.875,
+       "win_pct": 0.889,
        "halved": false,
-       "reg_points": 7,
+       "reg_points": 8,
        "post_points": 0,
-       "points": 7,
+       "points": 8,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27799,6 +27834,21 @@
          "opp_qb": "Kirk Cousins",
          "opp_att": 32,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "DAL",
+         "gid": "2026_10_SF_DAL",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "SF",
+         "score": "46-40",
+         "att": 28,
+         "opp_qb_id": "00-0033077",
+         "opp_qb": "Dak Prescott",
+         "opp_att": 51,
+         "res": "W"
         }
        ]
       },
@@ -27817,7 +27867,7 @@
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
-       "goff_rule": 0,
+       "goff_rule": 1,
        "win_pct": 0.556,
        "halved": false,
        "reg_points": 5,
@@ -27969,7 +28019,15 @@
          "date": "2026-11-15",
          "home": false,
          "team": "NE",
-         "res": "pending"
+         "score": "10-35",
+         "att": 4,
+         "opp_qb_id": "00-0033106",
+         "opp_qb": "Jared Goff",
+         "opp_att": 31,
+         "res": "goff",
+         "outcome": "L",
+         "credited": "Tommy DeVito",
+         "credited_att": 24
         }
        ]
       },
@@ -28431,7 +28489,7 @@
      ]
     },
     "TT13": {
-     "points": 28,
+     "points": 30,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28441,7 +28499,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28449,11 +28507,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.75,
+       "win_pct": 0.778,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28575,6 +28633,21 @@
          "opp_qb_id": "00-0030565",
          "opp_qb": "Geno Smith",
          "opp_att": 32,
+         "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "ATL",
+         "gid": "2026_10_KC_ATL",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "KC",
+         "score": "35-13",
+         "att": 35,
+         "opp_qb_id": "00-0039917",
+         "opp_qb": "Michael Penix Jr.",
+         "opp_att": 43,
          "res": "W"
         }
        ]
@@ -28735,7 +28808,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 2,
        "ties": 0,
        "playoff_wins": 0,
@@ -28743,11 +28816,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.75,
+       "win_pct": 0.778,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -28869,6 +28942,21 @@
          "opp_qb_id": "00-0039917",
          "opp_qb": "Michael Penix Jr.",
          "opp_att": 31,
+         "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "PIT",
+         "gid": "2026_10_PIT_CIN",
+         "date": "2026-11-15",
+         "home": true,
+         "team": "CIN",
+         "score": "38-18",
+         "att": 44,
+         "opp_qb_id": "00-0023459",
+         "opp_qb": "Aaron Rodgers",
+         "opp_att": 29,
          "res": "W"
         }
        ]
@@ -29177,14 +29265,14 @@
         null
        ],
        "wins": 3,
-       "losses": 5,
+       "losses": 6,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.375,
+       "win_pct": 0.333,
        "halved": true,
        "reg_points": 1,
        "post_points": 0,
@@ -29311,6 +29399,21 @@
          "opp_qb": "Justin Herbert",
          "opp_att": 23,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "CLE",
+         "gid": "2026_10_HOU_CLE",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "HOU",
+         "score": "24-27",
+         "att": 38,
+         "opp_qb_id": "00-0033537",
+         "opp_qb": "Deshaun Watson",
+         "opp_att": 40,
+         "res": "L"
         }
        ]
       },
@@ -29323,14 +29426,14 @@
         null
        ],
        "wins": 6,
-       "losses": 3,
+       "losses": 4,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.667,
+       "win_pct": 0.6,
        "halved": false,
        "reg_points": 6,
        "post_points": 0,
@@ -29472,6 +29575,21 @@
          "opp_qb": "Drake Maye",
          "opp_att": 38,
          "res": "W"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "MIN",
+         "gid": "2026_10_MIN_GB",
+         "date": "2026-11-15",
+         "home": true,
+         "team": "GB",
+         "score": "10-30",
+         "att": 27,
+         "opp_qb_id": "00-0029604",
+         "opp_qb": "Kirk Cousins",
+         "opp_att": 31,
+         "res": "L"
         }
        ]
       },
@@ -29489,7 +29607,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 2,
+       "missed_games": 3,
        "goff_rule": 1,
        "win_pct": 0.333,
        "halved": true,
@@ -29628,6 +29746,17 @@
          "team": "SEA",
          "score": "17-3",
          "res": "DNP"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "LV",
+         "gid": "2026_10_SEA_LV",
+         "date": "2026-11-15",
+         "home": false,
+         "team": "SEA",
+         "score": "21-13",
+         "res": "DNP"
         }
        ]
       }
@@ -29635,6 +29764,11 @@
     }
    },
    "audit": [
+    {
+     "kind": "goff",
+     "manager": "Matt",
+     "text": "Week 10 vs DET (10-35, L): Tommy DeVito threw 24 passes to Drake Maye's 4, so the result goes to Tommy DeVito."
+    },
     {
      "kind": "goff",
      "manager": "TT13",
