@@ -3649,7 +3649,7 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-16T21:06+00:00",
+ "generated_at": "2026-11-17T19:55+00:00",
  "managers": [
   "Matt",
   "TT13"
@@ -28666,7 +28666,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 4,
+       "missed_games": 5,
        "goff_rule": 1,
        "win_pct": 0.75,
        "halved": false,
@@ -28796,6 +28796,17 @@
          "home": true,
          "team": "BAL",
          "score": "10-33",
+         "res": "DNP"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "LAC",
+         "gid": "2026_10_LAC_BAL",
+         "date": "2026-11-16",
+         "home": true,
+         "team": "BAL",
+         "score": "20-23",
          "res": "DNP"
         }
        ]
@@ -29118,7 +29129,7 @@
         1,
         null
        ],
-       "wins": 0,
+       "wins": 1,
        "losses": 8,
        "ties": 0,
        "playoff_wins": 0,
@@ -29126,7 +29137,7 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.0,
+       "win_pct": 0.111,
        "halved": true,
        "reg_points": 0,
        "post_points": 0,
@@ -29253,6 +29264,21 @@
          "opp_qb": "C.J. Stroud",
          "opp_att": 35,
          "res": "L"
+        },
+        {
+         "wk": 10,
+         "type": "REG",
+         "opp": "BAL",
+         "gid": "2026_10_LAC_BAL",
+         "date": "2026-11-16",
+         "home": false,
+         "team": "LAC",
+         "score": "23-20",
+         "att": 18,
+         "opp_qb_id": "00-0033119",
+         "opp_qb": "Jacoby Brissett",
+         "opp_att": 49,
+         "res": "W"
         }
        ]
       },
