@@ -3649,14 +3649,14 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-17T19:55+00:00",
+ "generated_at": "2026-11-20T19:09+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
   "Matt": 466,
-  "TT13": 446.5
+  "TT13": 447.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27171,7 +27171,7 @@
    "label": "2026-27",
    "stakes": "Jersey",
    "status": "in_progress",
-   "through_week": 10,
+   "through_week": 11,
    "pending_games": 0,
    "bench": {
     "TT13": [
@@ -28489,7 +28489,7 @@
      ]
     },
     "TT13": {
-     "points": 30,
+     "points": 31,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -29290,7 +29290,7 @@
         1,
         null
        ],
-       "wins": 3,
+       "wins": 4,
        "losses": 6,
        "ties": 0,
        "playoff_wins": 0,
@@ -29298,11 +29298,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.333,
+       "win_pct": 0.4,
        "halved": true,
-       "reg_points": 1,
+       "reg_points": 2,
        "post_points": 0,
-       "points": 1,
+       "points": 2,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -29440,6 +29440,21 @@
          "opp_qb": "Deshaun Watson",
          "opp_att": 40,
          "res": "L"
+        },
+        {
+         "wk": 11,
+         "type": "REG",
+         "opp": "IND",
+         "gid": "2026_11_IND_HOU",
+         "date": "2026-11-19",
+         "home": true,
+         "team": "HOU",
+         "score": "26-3",
+         "att": 27,
+         "opp_qb_id": "00-0035710",
+         "opp_qb": "Daniel Jones",
+         "opp_att": 27,
+         "res": "W"
         }
        ]
       },
