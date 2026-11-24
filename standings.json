@@ -3649,7 +3649,7 @@
    "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-23T22:43+00:00",
+ "generated_at": "2026-11-24T21:21+00:00",
  "managers": [
   "Matt",
   "TT13"
@@ -28932,14 +28932,14 @@
         null
        ],
        "wins": 7,
-       "losses": 2,
+       "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.778,
+       "win_pct": 0.7,
        "halved": false,
        "reg_points": 7,
        "post_points": 0,
@@ -29081,6 +29081,21 @@
          "opp_qb": "Aaron Rodgers",
          "opp_att": 29,
          "res": "W"
+        },
+        {
+         "wk": 11,
+         "type": "REG",
+         "opp": "WAS",
+         "gid": "2026_11_CIN_WAS",
+         "date": "2026-11-23",
+         "home": false,
+         "team": "CIN",
+         "score": "20-22",
+         "att": 40,
+         "opp_qb_id": "00-0039910",
+         "opp_qb": "Jayden Daniels",
+         "opp_att": 35,
+         "res": "L"
         }
        ]
       },
