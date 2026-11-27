@@ -3671,16 +3671,64 @@
    },
    "home": "Matt",
    "winner": "Matt"
+  },
+  {
+   "season": "2026",
+   "wk": 12,
+   "type": "REG",
+   "date": "2026-11-26",
+   "qbs": {
+    "Matt": "Josh Allen",
+    "TT13": "Patrick Mahomes"
+   },
+   "ids": {
+    "Matt": "00-0034857",
+    "TT13": "00-0033873"
+   },
+   "teams": {
+    "Matt": "BUF",
+    "TT13": "KC"
+   },
+   "score": {
+    "Matt": 13,
+    "TT13": 10
+   },
+   "home": "Matt",
+   "winner": "Matt"
+  },
+  {
+   "season": "2026",
+   "wk": 12,
+   "type": "REG",
+   "date": "2026-11-26",
+   "qbs": {
+    "Matt": "Jared Goff",
+    "TT13": "Caleb Williams"
+   },
+   "ids": {
+    "Matt": "00-0033106",
+    "TT13": "00-0039918"
+   },
+   "teams": {
+    "Matt": "DET",
+    "TT13": "CHI"
+   },
+   "score": {
+    "Matt": 35,
+    "TT13": 39
+   },
+   "home": "Matt",
+   "winner": "TT13"
   }
  ],
- "generated_at": "2026-11-26T20:15+00:00",
+ "generated_at": "2026-11-27T20:01+00:00",
  "managers": [
   "Matt",
   "TT13"
  ],
  "lifetime_points": {
-  "Matt": 471,
-  "TT13": 449.5
+  "Matt": 472,
+  "TT13": 450.5
  },
  "season_wins": {
   "Matt": 2,
@@ -27215,7 +27263,7 @@
    },
    "managers": {
     "Matt": {
-     "points": 48,
+     "points": 49,
      "roster": [
       {
        "name": "Matthew Stafford",
@@ -27416,7 +27464,7 @@
         1,
         null
        ],
-       "wins": 9,
+       "wins": 10,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -27424,11 +27472,11 @@
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.9,
+       "win_pct": 0.909,
        "halved": false,
-       "reg_points": 9,
+       "reg_points": 10,
        "post_points": 0,
-       "points": 9,
+       "points": 10,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -27581,6 +27629,21 @@
          "opp_qb": "Kyle McCord",
          "opp_att": 33,
          "res": "W"
+        },
+        {
+         "wk": 12,
+         "type": "REG",
+         "opp": "KC",
+         "gid": "2026_12_KC_BUF",
+         "date": "2026-11-26",
+         "home": true,
+         "team": "BUF",
+         "score": "13-10",
+         "att": 21,
+         "opp_qb_id": "00-0033873",
+         "opp_qb": "Patrick Mahomes",
+         "opp_att": 29,
+         "res": "W"
         }
        ]
       },
@@ -27593,14 +27656,14 @@
         null
        ],
        "wins": 8,
-       "losses": 2,
+       "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.8,
+       "win_pct": 0.727,
        "halved": false,
        "reg_points": 8,
        "post_points": 0,
@@ -27757,6 +27820,21 @@
          "opp_qb": "Baker Mayfield",
          "opp_att": 33,
          "res": "W"
+        },
+        {
+         "wk": 12,
+         "type": "REG",
+         "opp": "CHI",
+         "gid": "2026_12_CHI_DET",
+         "date": "2026-11-26",
+         "home": true,
+         "team": "DET",
+         "score": "35-39",
+         "att": 36,
+         "opp_qb_id": "00-0039918",
+         "opp_qb": "Caleb Williams",
+         "opp_att": 44,
+         "res": "L"
         }
        ]
       },
@@ -28129,7 +28207,7 @@
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
-       "missed_games": 5,
+       "missed_games": 6,
        "goff_rule": 0,
        "win_pct": 0.4,
        "halved": true,
@@ -28267,6 +28345,17 @@
          "home": true,
          "team": "PHI",
          "score": "19-16",
+         "res": "DNP"
+        },
+        {
+         "wk": 12,
+         "type": "REG",
+         "opp": "DAL",
+         "gid": "2026_12_PHI_DAL",
+         "date": "2026-11-26",
+         "home": false,
+         "team": "PHI",
+         "score": "39-38",
          "res": "DNP"
         }
        ]
@@ -28614,7 +28703,7 @@
      ]
     },
     "TT13": {
-     "points": 33,
+     "points": 34,
      "roster": [
       {
        "name": "Patrick Mahomes",
@@ -28625,14 +28714,14 @@
         null
        ],
        "wins": 8,
-       "losses": 2,
+       "losses": 3,
        "ties": 0,
        "playoff_wins": 0,
        "sb_wins": 0,
        "byes": 0,
        "missed_games": 0,
        "goff_rule": 0,
-       "win_pct": 0.8,
+       "win_pct": 0.727,
        "halved": false,
        "reg_points": 8,
        "post_points": 0,
@@ -28789,6 +28878,21 @@
          "opp_qb": "Josh Johnson",
          "opp_att": 31,
          "res": "W"
+        },
+        {
+         "wk": 12,
+         "type": "REG",
+         "opp": "BUF",
+         "gid": "2026_12_KC_BUF",
+         "date": "2026-11-26",
+         "home": false,
+         "team": "KC",
+         "score": "10-13",
+         "att": 29,
+         "opp_qb_id": "00-0034857",
+         "opp_qb": "Josh Allen",
+         "opp_att": 21,
+         "res": "L"
         }
        ]
       },
@@ -29146,7 +29250,7 @@
         1,
         null
        ],
-       "wins": 6,
+       "wins": 7,
        "losses": 1,
        "ties": 0,
        "playoff_wins": 0,
@@ -29154,11 +29258,11 @@
        "byes": 0,
        "missed_games": 3,
        "goff_rule": 0,
-       "win_pct": 0.857,
+       "win_pct": 0.875,
        "halved": false,
-       "reg_points": 6,
+       "reg_points": 7,
        "post_points": 0,
-       "points": 6,
+       "points": 7,
        "subbed_out_after": null,
        "subbed_in_week": null,
        "games": [
@@ -29298,6 +29402,21 @@
          "opp_qb_id": "00-0040743",
          "opp_qb": "Tyler Shough",
          "opp_att": 42,
+         "res": "W"
+        },
+        {
+         "wk": 12,
+         "type": "REG",
+         "opp": "DET",
+         "gid": "2026_12_CHI_DET",
+         "date": "2026-11-26",
+         "home": false,
+         "team": "CHI",
+         "score": "39-35",
+         "att": 44,
+         "opp_qb_id": "00-0033106",
+         "opp_qb": "Jared Goff",
+         "opp_att": 36,
          "res": "W"
         }
        ]
